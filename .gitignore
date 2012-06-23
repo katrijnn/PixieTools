@@ -1,0 +1,5 @@
+#java files to ignore
+*.class
+
+#eclipse project stuff
+bin/
