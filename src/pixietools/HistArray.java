@@ -162,22 +162,19 @@ public class HistArray
 						{
 							if (chanNum == 0)
 							{
-								ch0[chanEnergy]= ch0[chanEnergy] + 1;
-							}
-								
+								ch0[chanEnergy]++;
+							}	
 							else if (chanNum == 1)
 							{
-								ch1[chanEnergy] = ch1[chanEnergy] + 1;
-							}
-								
+								ch1[chanEnergy]++;
+							}	
 							else if (chanNum == 2)
 							{
-								ch2[chanEnergy] = ch2[chanEnergy] + 1;
+								ch2[chanEnergy]++;
 							}
-								
 							else if (chanNum == 3)
 							{
-								ch3[chanEnergy] = ch3[chanEnergy] + 1;
+								ch3[chanEnergy]++;
 							}
 						}
 						else 
