@@ -15,11 +15,14 @@ public class HistArray
 		int[] ch2 = new int[32768];
 		int[] ch3 = new int[32768];
 		
+
 		String binFilePath = "C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\co60.bin";
+
 		
 		if (!newHistArray.getHistogram(binFilePath, 0, ch0, ch1, ch2, ch3))
 			return;
 		
+
 		int newBinSize = 32768;
 		String newBin_line = null;
 		
@@ -28,18 +31,22 @@ public class HistArray
 		newBin_line = newBinSize_reader.readLine();
 		newBinSize = Integer.parseInt(newBin_line);
 		
-		// For testing, lets just compress ch0 and ch1 and output them
 		int[] ch0New = new int[newBinSize];
 		int[] ch1New = new int[newBinSize];
 		int[] ch2New = new int[newBinSize];
 		int[] ch3New = new int[newBinSize];
+
 		
 		if (!newHistArray.getCompressedHistogram(ch0, ch0New))
-			return;
-		
+			return;	
 		if (!newHistArray.getCompressedHistogram(ch1, ch1New))
 			return;
+		if (!newHistArray.getCompressedHistogram(ch2, ch2New))
+			return;
+		if (!newHistArray.getCompressedHistogram(ch3, ch3New))
+			return;
 		
+
 		String out0Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch0.txt";
 		String out1Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch1.txt";
 		String out2Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch2.txt";
@@ -61,7 +68,7 @@ public class HistArray
 				newHistArray.writeHistogramToAsciiFile(out2Path, ch2New);
 		else if (userChanNum == 3)
 				newHistArray.writeHistogramToAsciiFile(out3Path, ch3New);
-		
+
 		System.out.println("Done!");
 	}
 
@@ -85,7 +92,8 @@ public class HistArray
 			System.out.println("An error has occured in writeHistogramToAsciiFile: " + e.getMessage());
 		}
 	}
-	
+
+
 	private boolean getCompressedHistogram(int[] oldHistogram, int[] newHistogram)
 	{
 		// Define valid sizes
@@ -129,9 +137,6 @@ public class HistArray
 		return true;
 	}
 
-
-	
-	
 	private boolean getHistogram(String binFilePath, int moduleId, int[] ch0, int[] ch1, int[] ch2, int[] ch3)
 	{
 		PixieBinFile myFile = new PixieBinFile(binFilePath);
@@ -170,17 +175,7 @@ public class HistArray
 		{
 			ch3[i] = 0;
 		}
-		
-		String line = null;
-		int userChanNum = 0;
-		
-		// read string input from console
-		// depending on which channel user requests
-		System.out.println("Please enter channel number between 0 and 3");
-		BufferedReader hist_reader = new BufferedReader(new InputStreamReader(System.in));
-		line = hist_reader.readLine();
-		userChanNum = Integer.parseInt(line);
-		
+
 		// Add +1 for respective channel and bin
 		try 
 		{	
