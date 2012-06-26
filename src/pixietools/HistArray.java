@@ -6,70 +6,76 @@ public class HistArray
 {
 	public static void main(String[] args)
 	{
-		// Example of how to export a spectrum for ch0 and ch1 with 1024 bins
-		
-		HistArray newHistArray = new HistArray();
-		
-		int[] ch0 = new int[32768];
-		int[] ch1 = new int[32768];
-		int[] ch2 = new int[32768];
-		int[] ch3 = new int[32768];
-		
-
-		String binFilePath = "C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\co60.bin";
-
-		
-		if (!newHistArray.getHistogram(binFilePath, 0, ch0, ch1, ch2, ch3))
+		try
+		{
+			HistArray newHistArray = new HistArray();
+			
+			int[] ch0 = new int[32768];
+			int[] ch1 = new int[32768];
+			int[] ch2 = new int[32768];
+			int[] ch3 = new int[32768];
+			
+	
+			String binFilePath = "C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\co60.bin";
+	
+			
+			if (!newHistArray.getHistogram(binFilePath, 0, ch0, ch1, ch2, ch3))
+				return;
+			
+	
+			int newBinSize = 32768;
+			String newBin_line = null;
+			
+			System.out.println("Please enter new Bin Size (1024, 2048, 4096, 8192, 16384) " + "\n");
+			BufferedReader newBinSize_reader = new BufferedReader(new InputStreamReader(System.in));
+			newBin_line = newBinSize_reader.readLine();
+			newBinSize = Integer.parseInt(newBin_line);
+			
+			int[] ch0New = new int[newBinSize];
+			int[] ch1New = new int[newBinSize];
+			int[] ch2New = new int[newBinSize];
+			int[] ch3New = new int[newBinSize];
+	
+			
+			if (!newHistArray.getCompressedHistogram(ch0, ch0New))
+				return;	
+			if (!newHistArray.getCompressedHistogram(ch1, ch1New))
+				return;
+			if (!newHistArray.getCompressedHistogram(ch2, ch2New))
+				return;
+			if (!newHistArray.getCompressedHistogram(ch3, ch3New))
+				return;
+			
+	
+			String out0Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch0.txt";
+			String out1Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch1.txt";
+			String out2Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch2.txt";
+			String out3Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch3.txt";
+			
+			String userNum_line = null;
+			int userChanNum = 0;
+			
+			System.out.println("Please enter channel number between 0 and 3");
+			BufferedReader userChanNum_reader = new BufferedReader(new InputStreamReader(System.in));
+			userNum_line = userChanNum_reader.readLine();
+			userChanNum = Integer.parseInt(userNum_line);
+			
+			if (userChanNum == 0)
+					newHistArray.writeHistogramToAsciiFile(out0Path, ch0New);
+			else if (userChanNum == 1)
+					newHistArray.writeHistogramToAsciiFile(out1Path, ch1New);
+			else if (userChanNum == 2)
+					newHistArray.writeHistogramToAsciiFile(out2Path, ch2New);
+			else if (userChanNum == 3)
+					newHistArray.writeHistogramToAsciiFile(out3Path, ch3New);
+	
+			System.out.println("Done!");
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
 			return;
-		
-
-		int newBinSize = 32768;
-		String newBin_line = null;
-		
-		System.out.println("Please enter new Bin Size (1024, 2048, 4096, 8192, 16384) " + "\n");
-		BufferedReader newBinSize_reader = new BufferedReader(new InputStreamReader(System.in));
-		newBin_line = newBinSize_reader.readLine();
-		newBinSize = Integer.parseInt(newBin_line);
-		
-		int[] ch0New = new int[newBinSize];
-		int[] ch1New = new int[newBinSize];
-		int[] ch2New = new int[newBinSize];
-		int[] ch3New = new int[newBinSize];
-
-		
-		if (!newHistArray.getCompressedHistogram(ch0, ch0New))
-			return;	
-		if (!newHistArray.getCompressedHistogram(ch1, ch1New))
-			return;
-		if (!newHistArray.getCompressedHistogram(ch2, ch2New))
-			return;
-		if (!newHistArray.getCompressedHistogram(ch3, ch3New))
-			return;
-		
-
-		String out0Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch0.txt";
-		String out1Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch1.txt";
-		String out2Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch2.txt";
-		String out3Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch3.txt";
-		
-		String userNum_line = null;
-		int userChanNum = 0;
-		
-		System.out.println("Please enter channel number between 0 and 3");
-		BufferedReader userChanNum_reader = new BufferedReader(new InputStreamReader(System.in));
-		userNum_line = userChanNum_reader.readLine();
-		userChanNum = Integer.parseInt(userNum_line);
-		
-		if (userChanNum == 0)
-				newHistArray.writeHistogramToAsciiFile(out0Path, ch0New);
-		else if (userChanNum == 1)
-				newHistArray.writeHistogramToAsciiFile(out1Path, ch1New);
-		else if (userChanNum == 2)
-				newHistArray.writeHistogramToAsciiFile(out2Path, ch2New);
-		else if (userChanNum == 3)
-				newHistArray.writeHistogramToAsciiFile(out3Path, ch3New);
-
-		System.out.println("Done!");
+		}
 	}
 
 	private void writeHistogramToAsciiFile(String outPath, int[] histogram)
