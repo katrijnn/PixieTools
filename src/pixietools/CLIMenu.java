@@ -42,7 +42,7 @@ public class CLIMenu {
 		{
 			String channelNum_line = null;
 			
-			System.out.println("Please enter desired channel number between 0 and 3");
+			System.out.println("Please enter desired channel number between 0 and 3" + "\n");
 			BufferedReader channelNum_reader = new BufferedReader(new InputStreamReader(System.in));
 			channelNum_line = channelNum_reader.readLine();
 			channelNum = Integer.parseInt(channelNum_line);
@@ -66,7 +66,7 @@ public class CLIMenu {
 		{
 			String matChNum1_line = null;
 			
-			System.out.println("Please enter first channel of two in matrix");
+			System.out.println("Please enter first channel of two in matrix" + "\n");
 			BufferedReader matChNum1_reader = new BufferedReader(new InputStreamReader(System.in));
 			matChNum1_line = matChNum1_reader.readLine();
 			matChNum1 = Integer.parseInt(matChNum1_line);
@@ -74,7 +74,7 @@ public class CLIMenu {
 		}
 		catch (Exception e)
 		{
-			System.out.println("Error occured in MatArray1Ch!" + e.getMessage());
+			System.out.println("Error occured in MatArray1Ch! " + e.getMessage());
 		}
 		return matChNum1;
 	}
@@ -87,14 +87,14 @@ public class CLIMenu {
 		{
 			String matChNum2_line = null;
 			
-			System.out.println("Please enter second channel of two in matrix");
+			System.out.println("Please enter second channel of two in matrix" + "\n");
 			BufferedReader matChNum2_reader = new BufferedReader(new InputStreamReader(System.in));
 			matChNum2_line = matChNum2_reader.readLine();
 			matChNum2 = Integer.parseInt(matChNum2_line);
 		}
 		catch (Exception e)
 		{
-			System.out.println("Error occured in MatArray2Ch!" + e.getMessage());
+			System.out.println("Error occured in MatArray2Ch! " + e.getMessage());
 		}
 		return matChNum2;
 	}
@@ -109,7 +109,7 @@ public class CLIMenu {
 			
 			System.out.println("Please enter desired compressed bin size:" + "\n" +
 			"0 - 1024" + "\n" + "1 - 2048" + "\n" + "2 - 4096" + "\n" + "3 - 8192" + 
-					"\n" + "4 - 16384");
+					"\n" + "4 - 16384" + "\n");
 			
 			BufferedReader newBinSize_reader = new BufferedReader(new InputStreamReader(System.in));
 			newBinSize_line = newBinSize_reader.readLine();
@@ -117,10 +117,29 @@ public class CLIMenu {
 		}
 		catch (Exception e)
 		{
-			System.out.println("Error occured in CompressionOptions!" + e.getMessage());
+			System.out.println("Error occured in CompressionOptions! " + e.getMessage());
 		}
 		return newBinSize;
 	}
+
+
+	private String getFilePath()
+	{
+		String filePath_line = null;
+
+		try
+		{
+			System.out.println("Please enter path for desired file" + "\n");
+			BufferedReader filePath_reader = new BufferedReader(new InputStreamReader(System.in));
+			filePath_line = filePath_reader.readLine();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error occured in getFilePath " + e.getMessage());		
+		}
+		return filePath_line;
+	}
 	
 }
+
 
