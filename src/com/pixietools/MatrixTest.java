@@ -7,10 +7,11 @@ public class MatrixTest
 	public static void main(String[] args)
 	{
 		MatrixTest newMatTest = new MatrixTest();
+		int[][] Mat;
 		
 		try
 		{
-			newMatTest.CreateMatrix(Mat);
+			Mat = newMatTest.CreateMatrix();
 
 			FileOutputStream fos = new FileOutputStream("C:\\Users\\Katrijn\\Desktop\\MatTest_out.txt");
 			OutputStreamWriter matOut = new OutputStreamWriter(fos, "UTF-8");
@@ -33,7 +34,7 @@ public class MatrixTest
 		}
 	}
 	
-	public void CreateMatrix()
+	public int[][] CreateMatrix()
 	{
 		// declare 2d array with 30 elements in each component
 		int[][] Mat = new int[30][30];
@@ -46,23 +47,25 @@ public class MatrixTest
 				Mat[i][j] = 0;
 			}
 		}
-	}
 	
-	try
-	{
-		// increment element [20][14]
-		for (int k=0; k < 20; k++)
+		try
 		{
-			Mat[20][14]++;
+			// increment element [20][14]
+			for (int k=0; k < 20; k++)
+			{
+				Mat[20][14]++;
+			}
+			
+			for (int m=0; m < 75; m++)
+			{
+				Mat[16][28]++;
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error occurred in Matrix Test! " + e.getMessage());
 		}
 		
-		for (int m=0; m < 75; m++)
-		{
-			Mat[16][28]++;
-		}
-	}
-	catch (Exception e)
-	{
-		System.out.println("Error occurred in Matrix Test! " + e.getMessage());
+		return Mat;
 	}
 }
