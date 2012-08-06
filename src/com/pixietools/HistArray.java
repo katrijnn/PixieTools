@@ -1,4 +1,4 @@
-package pixietools;
+package com.pixietools;
 
 import java.io.*;
 
