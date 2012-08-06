@@ -27,6 +27,7 @@ public class Mat2D {
 				}
 			}
 			
+			mat2D.writeMatrixToFile(String OutPath, int[][] resultMat);
 			
 		}
 		catch (Exception e)
@@ -34,6 +35,33 @@ public class Mat2D {
 			System.out.println("Error occured in Mat2D! " + e.getMessage());
 		}
 	}
+	
+	private writeMatrixToFile(String OutPath, int[][] resultMat)
+	{
+		try
+		{
+			
+			FileOutputStream fos = new FileOutputStream("C:\Users\kaatrin.a.netherton\Desktop\PixieOutFiles\Mat2D_out.txt");
+			OutputStreamWriter matFile = new OutputStreamWriter(fos, "UTF-8");
+
+			for (int x=0; x < resultMat.length; x++)
+			{
+				for (int y=0; y < Mat[x].length; y++)
+				{
+					matFile.write(String.valueOf(Mat[x][y]) + " ");
+
+				}
+				matFile.write("\n");
+			}
+			matFile.close();
+
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error in WriteMat2D to file! " + e.getMessage());
+		}
+	}
+	
 	
 	private boolean getMatrixComponents(String binFilePath, int moduleId, int [] ch0, int [] ch1)
 	{
