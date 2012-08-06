@@ -115,6 +115,7 @@ public class PixieBinFile
 		return _pixieFilePath;
 	}
 	
+	// sets file path
 	public void setFilePath(String filePath)
 	{
 		_pixieFilePath = filePath;
@@ -127,7 +128,7 @@ public class PixieBinFile
 			// read in all info in buffer header from start of binary position
 			buffHead.binaryStartPosition = _pixieFile.getFilePointer();
 			
-			// since in binary, reading in unsigned shorts
+			// since in binary, reading in unsigned shorts in little endian
 			buffHead.wordsInBuffer = readUShortLE(_pixieFile);
 			buffHead.moduleNumber = readUShortLE(_pixieFile);
 			buffHead.bufferFormat = readUShortLE(_pixieFile);
@@ -150,9 +151,12 @@ public class PixieBinFile
 	{
 		try
 		{
-			// read in all info in event header
+			// find where file pointer is at current event
 			eventHead.binaryStartPosition = _pixieFile.getFilePointer();
 			
+			// read in three words in little endian (time, and hit pattern)
+			// hit pattern gives what channel was hit, and possible coincidence
+			// data if that is requested in Pixie
 			eventHead.eventPattern = readUShortLE(_pixieFile);
 			eventHead.eventTimeHi = readUShortLE(_pixieFile);
 			eventHead.eventTimeLo = readUShortLE(_pixieFile);
@@ -250,7 +254,8 @@ public class PixieBinFile
 			_currEventHeader = null;
 			_currChannelHeader = null;
 			
-			// Get position to next buffer
+			// calculate position of next buffer based on start position
+			// and how where file started (*2 because each word is 2 bytes)
 			long posNextBuffer = 0;
 			posNextBuffer += _currBufferHeader.binaryStartPosition;
 			posNextBuffer += _currBufferHeader.wordsInBuffer * 2;

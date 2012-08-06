@@ -6,7 +6,7 @@ public class BinStats
 	public static void main(String[] args) 
 	{
 		// insert bin file name here
-		PixieBinFile myFile = new PixieBinFile("C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\test_file_0004.bin");
+		PixieBinFile myFile = new PixieBinFile("C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\2d_test_file_0001.bin");
 		myFile.open();
 		
 		try 

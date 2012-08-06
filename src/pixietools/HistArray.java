@@ -15,7 +15,8 @@ public class HistArray
 			int[] ch2 = new int[32768];
 			int[] ch3 = new int[32768];
 			
-	
+			
+			
 			String binFilePath = "C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\co60.bin";
 	
 			
@@ -26,7 +27,7 @@ public class HistArray
 			int newBinSize = 32768;
 			String newBin_line = null;
 			
-			System.out.println("Please enter new Bin Size (1024, 2048, 4096, 8192, 16384) " + "\n");
+			System.out.println("Please enter new Bin Size (1024, 2048, 4096, 8192, 16384, 32768) " + "\n");
 			BufferedReader newBinSize_reader = new BufferedReader(new InputStreamReader(System.in));
 			newBin_line = newBinSize_reader.readLine();
 			newBinSize = Integer.parseInt(newBin_line);
@@ -47,10 +48,10 @@ public class HistArray
 				return;
 			
 	
-			String out0Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch0.txt";
-			String out1Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch1.txt";
-			String out2Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch2.txt";
-			String out3Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch3.txt";
+			String out0Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\co60_out.txt";
+			String out1Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch1_out.txt";
+			String out2Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch2_out.txt";
+			String out3Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch3_out.txt";
 			
 			String userNum_line = null;
 			int userChanNum = 0;
@@ -103,7 +104,7 @@ public class HistArray
 	private boolean getCompressedHistogram(int[] oldHistogram, int[] newHistogram)
 	{
 		// Define valid sizes
-		int[] validNewBinSizes = {1024, 2048, 4096, 8192, 16384};
+		int[] validNewBinSizes = {1024, 2048, 4096, 8192, 16384, 32768};
 		boolean validBinSize = false;
 		
 		// Only compress histograms that were originally 32768 (for now)

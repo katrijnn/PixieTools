@@ -1,68 +1,285 @@
 package pixietools;
 
-//import pixietools.*;
-
-//import java.util.*;
 import java.io.*;
 
-
-public class HistMatData
-{
-
-	public static void main(String[] args) 
-	{		
-		// insert bin file name here
-		PixieBinFile myFile = new PixieBinFile("C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\test_file_0015.bin");
-		myFile.open();
-		
-		try 
+public class HistMatData {
+	
+	
+	public static void main(String[] args)
+	{
+		try
 		{
-			System.out.println("Starting read...");
+			MatArray matArray = new MatArray();
 			
-			// insert file output name here
-			FileOutputStream fos1 = new FileOutputStream("C:\\Users\\Katrijn\\Desktop\\hist_mat_data.txt");
-			OutputStreamWriter out1 = new OutputStreamWriter(fos1, "UTF-8");
-					
-			// Create header
-			out1.write("Channel\tEnergy (bin)" + "\n");
-			out1.write("-------------------------------");
-			out1.write("\n\n");
+			String outPath = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\Matrix.txt";
+			
+			int[] ch0 = new int[32768];
+			int[] ch1 = new int[32768];
+			int[] ch2 = new int[32768];
+			int[] ch3 = new int[32768];
+			
+			String binFilePath = "C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\co60_001.bin";
+			
+			FileOutputStream fos = new FileOutputStream(outPath);
+			OutputStreamWriter matFile = new OutputStreamWriter(fos, "UTF-8");
+			
+			/*
+			String out01Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\Mat01.txt";
+			String out02Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\Mat02.txt";
+			String out03Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\Mat03.txt";
+			String out12Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\Mat12.txt";
+			String out13Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\Mat13.txt";
+			String out23Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\Mat23.txt";
+			*/
+			
+			PixieBinFile myFile = new PixieBinFile(binFilePath);
+			/*
+			// open file, if not open return false
+			if (!myFile.open())
+				return false;
+			
+			// check to make sure moduleId is either 0 or 1
+			if ((moduleId != 0) && (moduleId != 1))
+				return false;
+			
+			// check that arrays are correct length
+			if (ch0.length != 32768) 
+				return false;
+			if (ch1.length != 32768) 
+				return false;
+			if (ch2.length != 32768) 
+				return false;
+			if (ch3.length != 32768) 
+				return false;
+			*/
+			
+			// zero out arrays
+			for (int i=0; i < ch0.length; i++)
+			{
+				ch0[i] = 0;
+			}
+			
+			for (int i=0; i < ch1.length; i++)
+			{
+				ch1[i] = 0;
+			}
 
-			// Uncomment line below when limiting number of buffers to output
-			// long bufferCount = 0;
+			for (int i=0; i < ch2.length; i++)
+			{
+				ch2[i] = 0;
+			}
+			
+			for (int i=0; i < ch3.length; i++)
+			{
+				ch3[i] = 0;
+			}
 			
 			for (boolean bBuffer = myFile.moveFirstBuffer(); bBuffer; bBuffer = myFile.moveNextBuffer())
 			{
-				// Uncomment line below when limiting number of buffers to output
-				// bufferCount++;
-				
-				//Uncomment line below to limit number of buffers output
-				 //if (bufferCount >= 1) break;
-				
-				
-				// Loop over all events and print them to text file
+				/*// Check to see if this buffer belongs to moduleId
+				if (myFile.getBufferModuleNumber() != moduleId)
+					continue;
+				*/
 				for (boolean bEvent = myFile.moveFirstEvent(); bEvent; bEvent = myFile.moveNextEvent())
 				{
-					// loop over each channel hit in this event
 					for (boolean bChannel = myFile.moveFirstChannel(); bChannel; bChannel = myFile.moveNextChannel())
 					{
+						int chanNum = myFile.getEventChannel();
+						int chanEnergy = myFile.getEventEnergy();
+						
+						if (chanEnergy < 32768)
+						{
+							if (chanNum == 0)
+							{
+								ch0[chanEnergy]++;
+							}
+							
+							else if (chanNum == 1)
+							{
+								ch1[chanEnergy]++;
+							}
+							
+							else if (chanNum == 2) 
+							{
+								ch2[chanEnergy]++;
+							}
+							
+							else if (chanNum == 3)
+							{
+								ch3[chanEnergy]++;
+							}
+						}
+						else 
+						{
+							continue;
+						}	
+					}	
+				}
+			}	
+		
+			String chanNum1_line = null;
+			int chanNum1 = 0;
+			
+			String chanNum2_line = null;
+			int chanNum2 = 0;
+			
+			System.out.println("Please enter first of the 2 channels you wish to see in this matrix: ");
+			BufferedReader chanNum1_reader = new BufferedReader(new InputStreamReader(System.in));
+			chanNum1_line = chanNum1_reader.readLine();
+			chanNum1 = Integer.parseInt(chanNum1_line);
+			
+			System.out.println("Please enter second of the 2 channels you wish to see in this matrix: ");
+			BufferedReader chanNum2_reader = new BufferedReader(new InputStreamReader(System.in));
+			chanNum2_line = chanNum2_reader.readLine();
+			chanNum2 = Integer.parseInt(chanNum2_line);
 
-						out1.write(String.valueOf(myFile.getEventChannel()));
-						out1.write("\t\t");
-						out1.write(String.valueOf(myFile.getEventEnergy()));
-						out1.write("\n");
+			if (chanNum1 >= 0 && chanNum1 <= 3)
+			{
+				if (chanNum2 >= 1 && chanNum2 <= 3)
+				{
+					if (chanNum1 == 0 && chanNum2 == 1)
+					{
+						for (int i=0; i < ch0.length; i++)
+						{
+							for (int j=0; j < ch1.length; j++)
+							{
+								int resultMat01[][] = {ch0, ch1};
+								//matFile.write(String.valueOf(resultMat01[i][j] + "\n"));
+							}
+						}
 					}
+					
+					
+					if (chanNum1 == 0 && chanNum2 == 2)
+					{
+						for (int i=0; i < ch0.length; i++)
+						{
+							for (int j=0; j < ch2.length; j++)
+							{
+								int resultMat02[][] = {ch0, ch2};
+								//matFile.write(String.valueOf(resultMat02[i][j] + "\n"));
+								
+							}
+						}
+					}
+					
+					if (chanNum1 == 0 && chanNum2 == 3)
+					{
+						for (int i=0; i < ch0.length; i++)
+						{
+							for (int j=0; j < ch3.length; j++)
+							{
+								int resultMat03[][] = {ch0, ch3};
+								//matFile.write(String.valueOf(resultMat03[i][j] + "\n"));
+							}
+						}
+					}
+					
+					if (chanNum1 == 1 && chanNum2 == 2)
+					{
+						for (int i=0; i < ch1.length; i++)
+						{
+							for (int j=0; j < ch2.length; j++)
+							{
+								int resultMat12[][] = {ch1, ch2};
+								//matFile.write(String.valueOf(resultMat12[i][j] + "\n"));
+							}
+						}
+					}
+					
+					if (chanNum1 == 1 && chanNum2 == 3)
+					{
+						for (int i=0; i < ch1.length; i++)
+						{
+							for (int j=0; j < ch3.length; j++)
+							{
+								int resultMat13[][] = {ch1, ch3};
+								//matFile.write(String.valueOf(resultMat13[i][j] + "\n"));
+							}
+						}
+					}
+					
+					if (chanNum1 == 2 && chanNum2 == 3)
+					{
+						for (int i=0; i < ch2.length; i++)
+						{
+							for (int j=0; j < ch3.length; j++)
+							{
+								int resultMat23[][] = {ch2, ch3};
+								//matFile.write(String.valueOf(resultMat23[i][j] + "\n"));
+								
+							}
+						}
+					}
+					
+				}
+			}	
+			
+		if (chanNum1 == 0 && chanNum2 == 1)
+		{
+			for (int i=0; i < resultMat01[i].length; i++)
+			{
+				for (int j=0; j < resultMat01[j].length; j++)
+				{
+					matFile.write(String.valueOf(resultMat01[i][j] + "\n"));
 				}
 			}
-			out1.close();
-					
-			System.out.println("Finished...");
 		}
-		catch (Exception e) 
+		matFile.close();
+		fos.close();
+		}
+		
+		catch (Exception e)
 		{
-			System.out.println("An error has occured!");
+			System.out.println("Error in MatArray! " + e.getMessage());
+		}
+			
+	}
+/*
+	private void writeMatrixToAscii(String matOutPath, int[][] resultMat)
+	{
+		try
+		{
+			FileOutputStream fos = new FileOutputStream(matOutPath);
+			OutputStreamWriter matFile = new OutputStreamWriter(fos, "UTF-8");
+			
+			for (int i=0; i < resultMat[i].length; i++)
+			{
+				for (int j=0; j < resultMat[j].length; j++)
+				{
+					matFile.write(String.valueOf(resultMat[i][j] + "\n"));
+				}
+			}
+			
+			matFile.close();
+			fos.close();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error occured in writeMatrix! " + e.getMessage());
+		}
+	}
+*/
+
+	private boolean getMatrixComponents(String binFilePath, int moduleId, int [] ch0, int [] ch1, int [] ch2, int [] ch3)
+	{
+		
+		
+		// increment arrays for each particular energy
+		
+		try
+		{
+			
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error Occured in getMatrixComponents!" + e.getMessage());
+			myFile.close();
+			return false;
 		}
 		
 		myFile.close();
-	}
+		return true;
+	}	
 }
+ 
