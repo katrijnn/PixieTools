@@ -17,7 +17,7 @@ public class HistArray
 			
 			
 			
-			String binFilePath = "C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\co60.bin";
+			String binFilePath = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieTestFiles\\co60.bin";
 	
 			
 			if (!newHistArray.getHistogram(binFilePath, 0, ch0, ch1, ch2, ch3))
@@ -48,10 +48,10 @@ public class HistArray
 				return;
 			
 	
-			String out0Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\co60_out.txt";
-			String out1Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch1_out.txt";
-			String out2Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch2_out.txt";
-			String out3Path = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\ch3_out.txt";
+			String out0Path = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\co60_out.txt";
+			String out1Path = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\ch1_out.txt";
+			String out2Path = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\ch2_out.txt";
+			String out3Path = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\ch3_out.txt";
 			
 			String userNum_line = null;
 			int userChanNum = 0;

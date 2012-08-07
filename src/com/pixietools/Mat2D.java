@@ -8,73 +8,78 @@ public class Mat2D {
 	{
 		try
 		{
+			System.out.println("Starting...");	
 			
 			int[] ch0 = new int[32768];
 			int[] ch1 = new int[32768];
 		
-			
 			String binFilePath = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieTestFiles\\co60_001.bin";
+
 			
-			Mat2D mat2D = Mat2D();
 			
-			mat2D.getMatrixComponents(String binFilePath, int moduleId, int [] ch0, int [] ch1);
+			Mat2D mat2D = new Mat2D();
+
+			int resultMat[][] = new int[ch0.length][ch1.length];
+
 			
+			if (mat2D.getMatrixComponents(binFilePath, 0, ch0, ch1))
+				return;
+			
+			FileOutputStream fos = new FileOutputStream("C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Mat2D_out.txt");
+			OutputStreamWriter matFile = new OutputStreamWriter(fos, "UTF-8");
+			
+			// comparison: if the element in array x is the same as
+			// the element in array y, then the element in the matrix
+			// where they meet is incremented by 1
+			// otherwise it returns the matrix in it's untouched format
+			// default value for all elements of the matrix is 0
 			for (int x=0; x < ch0.length; x++)
 			{
 				for (int y=0; y < ch1.length; y++)
 				{
-					int resultMat[x][y];
+					resultMat[x][y] = 0;
+					if (ch0[x] == ch1[y])
+					{
+						resultMat[x][y]++;
+						
+						for (int i=0; i < resultMat.length; i++)
+						{
+							for (int j=0; j < resultMat[i].length; j++)
+							{
+								matFile.write(String.valueOf(resultMat[i][j]) + " ");
+							}
+							matFile.write("0 \n");
+						}
+					}
+					else
+						continue;
 				}
+				matFile.close();
 			}
-			
-			mat2D.writeMatrixToFile(String OutPath, int[][] resultMat);
-			
+
 		}
 		catch (Exception e)
 		{
 			System.out.println("Error occured in Mat2D! " + e.getMessage());
 		}
+		System.out.println("Finished!");	
 	}
-	
-	private writeMatrixToFile(String OutPath, int[][] resultMat)
-	{
-		try
-		{
-			
-			FileOutputStream fos = new FileOutputStream("C:\Users\kaatrin.a.netherton\Desktop\PixieOutFiles\Mat2D_out.txt");
-			OutputStreamWriter matFile = new OutputStreamWriter(fos, "UTF-8");
-
-			for (int x=0; x < resultMat.length; x++)
-			{
-				for (int y=0; y < Mat[x].length; y++)
-				{
-					matFile.write(String.valueOf(Mat[x][y]) + " ");
-
-				}
-				matFile.write("\n");
-			}
-			matFile.close();
-
-		}
-		catch (Exception e)
-		{
-			System.out.println("Error in WriteMat2D to file! " + e.getMessage());
-		}
-	}
-	
 	
 	private boolean getMatrixComponents(String binFilePath, int moduleId, int [] ch0, int [] ch1)
 	{
-		PixieBinFile myFile = new PixieBinFile(binFilePath);
 		
+		PixieBinFile myFile = new PixieBinFile(binFilePath);
+
 		// open file, if not open return false
 		if (!myFile.open())
 			return false;
 		
+
 		// check to make sure moduleId is either 0 or 1
 		if ((moduleId != 0) && (moduleId != 1))
 			return false;
 		
+
 		// check that arrays are correct length
 		if (ch0.length != 32768) 
 			return false;
@@ -94,7 +99,6 @@ public class Mat2D {
 		}
 	
 		// increment arrays for each particular energy
-		
 		try
 		{
 			for (boolean bBuffer = myFile.moveFirstBuffer(); bBuffer; bBuffer = myFile.moveNextBuffer())
