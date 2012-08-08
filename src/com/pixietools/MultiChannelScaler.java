@@ -1,13 +1,10 @@
 package com.pixietools;
 
-//import pixietools.*;
-
 import java.text.DecimalFormat;
-
 import java.io.*;
 
 
-public class BinToStack 
+public class MultiChannelScaler 
 {
 
 	public static void main(String[] args) 
@@ -86,7 +83,7 @@ public class BinToStack
 						{
 							if (chanNum == 1)
 							{
-								stackArray[Energy]= stackArray[Energy] + 1;
+								stackArray[Energy] = stackArray[Energy] + 1;
 							}
 								
 						}
