@@ -32,7 +32,7 @@ public class PixieToolsGUI {
 			JTabbedPane tabbedPane = new JTabbedPane();
 			
 			JComponent panel1 = makeTextPanel("Panel #1");
-			tabbedPane.addTab("Tab 1", panel1, "Does nothing")
+			tabbedPane.addTab("Tab 1", panel1, "Does nothing");
 			tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 			
 			JComponent panel2 = makeTextPanel("Panel #2");
@@ -59,7 +59,7 @@ public class PixieToolsGUI {
 		{
 			JPanel panel = new JPanel(false);
 			JLabel filler = new JLabel(text);
-			filler.setHorizontalAlignment(JLabel.CENTER);\
+			filler.setHorizontalAlignment(JLabel.CENTER);
 			panel.setLayout(new GridLayout(1,1));
 			panel.add(filler);
 			return panel;
@@ -70,7 +70,7 @@ public class PixieToolsGUI {
 	private static void createAndShowGUI() 
 	{
 		// create and set up window
-		JFrame frame = new JFrame = new JFrame("PixieToolsWindow");
+		JFrame frame =  new JFrame("PixieToolsWindow");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// add content to window
@@ -99,19 +99,17 @@ public class PixieToolsGUI {
 	 * Create the application.
 	 */
 	public PixieToolsGUI() {
-		initialize();
+		private void initialize() 
+			frame = new JFrame();
+			frame.setBounds(100, 100, 450, 300);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.getContentPane().setLayout(null);
+
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	/*
-	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-	}
-	*/
+
 	
 }

@@ -3,7 +3,7 @@ package com.pixietools;
 import java.io.*;
 import java.util.*;
 
-public class CLIMenu {
+public class PixieToolsCLI {
 	public static void main(String[] args)
 	{
 		

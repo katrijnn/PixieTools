@@ -13,7 +13,7 @@ public class MatrixTest
 		{
 			Mat = newMatTest.CreateMatrix();
 
-			FileOutputStream fos = new FileOutputStream("C:\Users\kaatrin.a.netherton\Desktop\PixieOutFiles\MatTest_out.txt");
+			FileOutputStream fos = new FileOutputStream("C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\MatTest_out.txt");
 			OutputStreamWriter matOut = new OutputStreamWriter(fos, "UTF-8");
 
 			for (int i=0; i < Mat.length; i++)
