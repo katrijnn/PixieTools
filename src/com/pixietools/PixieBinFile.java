@@ -8,6 +8,8 @@ import java.nio.ByteOrder;
 
 public class PixieBinFile 
 {
+	// set up to get file path, and use random access
+	// so we can move around within the file
 	private String _pixieFilePath = "";
 	private RandomAccessFile _pixieFile = null;
 	private boolean _fileLoaded = false;
@@ -195,7 +197,7 @@ public class PixieBinFile
 			// read in all info in channel header
 			chanHead.binaryStartPosition = _pixieFile.getFilePointer();
 			
-			// read in channel number, fast trigger time and pulse height
+			// read in channel number, fast trigger time and pulse height in little endian
 			chanHead.channelNumber = chanNumber;
 			chanHead.channelTrigTime = readUShortLE(_pixieFile);
 			chanHead.channelEnergy = readUShortLE(_pixieFile);
@@ -404,6 +406,8 @@ public class PixieBinFile
 	
 	public boolean moveNextChannel()
 	{
+		// move to next channel in event
+		// checks to ensure file is loaded
 		if (!_fileLoaded)
 			return false;
 		
@@ -454,9 +458,10 @@ public class PixieBinFile
 	
 	public int getBufferModuleNumber()
 	{
+		// get module number (which pixie card being used)
 		if (!_fileLoaded)
 			return -1;
-		
+		// returns module number as integer
 		return (int)_currBufferHeader.moduleNumber;
 	}
 	
@@ -465,7 +470,8 @@ public class PixieBinFile
 		// calculating buffer time using words High, Mid, Low
 		if (!_fileLoaded)
 			return -1.0;
-				
+		
+		// returns time at which buffer was created
 		double highTime = _currBufferHeader.bufferTimeHi * (57.2662306133);
 		double midTime = _currBufferHeader.bufferTimeMid * (0.0008738133);
 		double lowTime = _currBufferHeader.bufferTimeLo * (0.0000000133);
@@ -478,6 +484,7 @@ public class PixieBinFile
 		// This function converts the Seconds to Nanoseconds
 		double bufferTimeS = getBufferTime();
 		
+		// will never get a negative buffertime, so this means there's an error
 		if (bufferTimeS == -1.0)
 			return -1.0;
 		
@@ -489,11 +496,13 @@ public class PixieBinFile
 		// calculating event time using buffer High, event high, event low
 		if (!_fileLoaded)
 			return -1.0;
-				
+		
+		// convert buffer words over to actual time format
 		double highTime = _currBufferHeader.bufferTimeHi * (57.2662306133);
 		double midTime = _currEventHeader.eventTimeHi * (0.0008738133);
 		double lowTime = _currEventHeader.eventTimeLo * (0.0000000133);
 		
+		// adding three words together to get absolute time stamp
 		return highTime + midTime + lowTime;
 	}
 	
@@ -518,6 +527,8 @@ public class PixieBinFile
 		double midTime = _currEventHeader.eventTimeHi * (0.0008738133);
 		double lowTime = _currChannelHeader.channelTrigTime * (0.0000000133);
 		
+		// see PixieDataCollection Guide for more info on difference
+		// between FastTriggerTime and EventTime
 		return highTime + midTime + lowTime;
 	}
 	
@@ -534,6 +545,7 @@ public class PixieBinFile
 	
 	public int getEventChannel()
 	{
+		// this function returns the event channel number
 		if (!_fileLoaded)
 			return -1;
 		
@@ -542,6 +554,7 @@ public class PixieBinFile
 	
 	public int getEventEnergy()
 	{
+		// this function returns the event energy reading
 		if (!_fileLoaded)
 			return -1;
 		
@@ -550,6 +563,7 @@ public class PixieBinFile
 	
 	private int readUShortLE(RandomAccessFile _ranAccessFile)
 	{
+		// this function allows PixieBinFile to read the data in little endian (normal for Java)
 		int returnValue = -1;
 		
 		try

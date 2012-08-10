@@ -3,7 +3,6 @@ package com.pixietools;
 import java.text.DecimalFormat;
 import java.io.*;
 
-
 public class MultiChannelScaler 
 {
 
@@ -12,7 +11,7 @@ public class MultiChannelScaler
 		// insert bin file name here
 		PixieBinFile myFile = new PixieBinFile("C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\test_file_0004.bin");
 		// for testing use test_file_0010.bin 
-		// this file is a ramp-up of voltages, there is not error within it (some test files have errors)
+		// this file is a ramp-up of voltages, there is no error within it (some test files have errors)
 		myFile.open();
 		
 		int[] stackArray = new int[32768];
@@ -55,20 +54,25 @@ public class MultiChannelScaler
 				 //if (bufferCount >= 1) break;
 				
 				
-				// Loop over all events and print them to text file
+				// Loop over all events; read-into memory
 				for (boolean bEvent = myFile.moveFirstEvent(); bEvent; bEvent = myFile.moveNextEvent())
 				{
-					// loop over each channel hit in this event
+					// loop over each channel hit in each event
 					for (boolean bChannel = myFile.moveFirstChannel(); bChannel; bChannel = myFile.moveNextChannel())
 					{
+						// if hit is from linac (channel 0)
 						if (myFile.getEventChannel() == 0)
 						{
+							// assign that time stamp to linacHitTime
 							linacHitTime = Double.valueOf(myFile.getEventTimeNs());
 						}
+						
 						DecimalFormat dFormat = new DecimalFormat("#.########");
 						
+						// create variable to store time-stamp of event relative to linac pulse
 						double timeDifference = (linacHitTime - (Double.valueOf(dFormat.format(myFile.getEventTimeNs()))));
 						
+						// write out event channel, time-difference and energy of pulse
 						stackOut.write(String.valueOf(myFile.getEventChannel()));
 						stackOut.write("\t\t");
 						stackOut.write(String.valueOf(timeDifference));
@@ -79,10 +83,15 @@ public class MultiChannelScaler
 						int Energy = myFile.getEventEnergy();
 						int chanNum = myFile.getEventChannel();
 						
+						
+						// Creating histogram data
+						// ensure there is no "bad data" in run
 						if (Energy < 32768)
 						{
+							// if pulse is not from linac
 							if (chanNum == 1)
 							{
+								// increment hist array by 1 for energy of pulse
 								stackArray[Energy] = stackArray[Energy] + 1;
 							}
 								
@@ -92,6 +101,7 @@ public class MultiChannelScaler
 				}
 			}
 			stackOut.close();
+			stackHistOut.close();
 					
 			System.out.println("Finished...");
 		}
