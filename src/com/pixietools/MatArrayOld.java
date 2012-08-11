@@ -2,14 +2,14 @@ package com.pixietools;
 
 import java.io.*;
 
-public class MatArray {
+public class MatArrayOld {
 	
 	
 	public static void main(String[] args)
 	{
 		try
 		{
-			MatArray matArray = new MatArray();
+			MatArrayOld matArray = new MatArrayOld();
 			
 			String outPath = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\Matrix.txt";
 			
