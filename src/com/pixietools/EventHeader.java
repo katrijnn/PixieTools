@@ -13,6 +13,18 @@ public class EventHeader
 	public boolean channel2Hit = false;
 	public boolean channel3Hit = false;
 	
+	public void copy(EventHeader eh)
+	{
+		this.eventPattern = eh.eventPattern;
+		this.eventTimeHi = eh.eventTimeHi;
+		this.eventTimeLo = eh.eventTimeLo;
+		this.binaryStartPosition = eh.binaryStartPosition;
+		this.channel0Hit = eh.channel0Hit;
+		this.channel1Hit = eh.channel1Hit;
+		this.channel2Hit = eh.channel2Hit;
+		this.channel3Hit = eh.channel3Hit;
+	}
+	
 	public int getChannelHitCount()
 	{
 		int channelHitCount = 0;

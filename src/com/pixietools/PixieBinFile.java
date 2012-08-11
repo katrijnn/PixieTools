@@ -19,6 +19,14 @@ public class PixieBinFile
 	private EventHeader _currEventHeader = null;
 	private ChannelHeader _currChannelHeader = null;
 	
+	// Mark / Roll back headers
+	private BufferHeader _markBufferHeader = null;
+	private EventHeader _markEventHeader = null;
+	private ChannelHeader _markChannelHeader = null;
+	private long _markFilePosition = 0;
+	
+	
+	
 	PixieBinFile()
 	{
 		// Do nothing
@@ -588,6 +596,36 @@ public class PixieBinFile
 		}
 		
 		return returnValue;
+	}
+	
+	public void markPosition()
+	{
+		try
+		{
+			_markBufferHeader.copy(_currBufferHeader);
+			_markEventHeader.copy(_currEventHeader);
+			_markChannelHeader.copy(_currChannelHeader);
+			_markFilePosition = _pixieFile.getFilePointer();
+		}
+		catch (IOException e)
+		{
+			System.out.println("Error in markPosition() " + e.getMessage());
+		}
+	}
+	
+	public void rollbackPosition()
+	{
+		try
+		{
+			_currBufferHeader.copy(_markBufferHeader);
+			_currEventHeader.copy(_markEventHeader);
+			_currChannelHeader.copy(_markChannelHeader);
+			_pixieFile.seek(_markFilePosition);
+		}
+		catch (IOException e)
+		{
+			System.out.println("Error in rollbackPosition() " + e.getMessage());
+		}
 	}
 	
 }

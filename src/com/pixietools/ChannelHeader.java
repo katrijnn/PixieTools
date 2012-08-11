@@ -9,4 +9,12 @@ public class ChannelHeader
 	public int channelEnergy = 0;
 	
 	public long binaryStartPosition = 0;
+	
+	public void copy(ChannelHeader ch)
+	{
+		this.channelNumber = ch.channelNumber;
+		this.channelTrigTime = ch.channelTrigTime;
+		this.channelEnergy = ch.channelEnergy;
+		this.binaryStartPosition = ch.binaryStartPosition;
+	}
 }
