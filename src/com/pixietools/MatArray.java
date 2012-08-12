@@ -22,8 +22,57 @@ public class MatArray {
 		}
 		
 		// Determine which channels to compare
-		int ch1 = 0;
-		int ch2 = 1;
+		int ch0 = 0;
+		int ch1 = 1;
+		
+		int time = 20;
+		
+		
+		try 
+		{	
+			for (boolean bBuffer = myFile.moveFirstBuffer(); bBuffer; bBuffer = myFile.moveNextBuffer())
+			{
+				// Check to see if this buffer belongs to moduleId
+				if (myFile.getBufferModuleNumber() != moduleId)
+					continue;
+				
+				for (boolean bEvent = myFile.moveFirstEvent(); bEvent; bEvent = myFile.moveNextEvent())
+				{
+					for (boolean bChannel = myFile.moveFirstChannel(); bChannel; bChannel = myFile.moveNextChannel())
+					{
+						int chanNum = myFile.getEventChannel();
+						int chanEnergy = myFile.getEventEnergy();
+						int chanTime = myFile.getEventTime();
+	
+						
+						if chanNum == 0
+						{
+							myFile.markPosition();
+							int timeDifference = myFile.getEventTime() + time;
+							if timeDifference <= chanTime
+								dataMatrix[chanEnergy][]
+							else 
+								continue;
+						}
+						
+						}
+						else 
+						{
+							continue;
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("An error has occured in getHistogram: " + e.getMessage());
+			myFile.close();
+			return false;
+		}
+		
+		myFile.close();
+		
 		
 		// iterate each event in PixieBinFile
 		// for any event that has ch1 hit, iterate from that point
