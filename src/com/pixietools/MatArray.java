@@ -90,7 +90,7 @@ public class MatArray {
 		// uses 4096 by 4096 * 2 bytes.  Here is the website http://radware.phy.ornl.gov/faq.html#8.1
 	}
 
-	
+	/*
 	private boolean getCompressedMatrix(int[][] oldMatrix, int[][] newMatrix)
 	{
 		// Define valid sizes
@@ -138,5 +138,5 @@ public class MatArray {
 		
 		return true;
 	}
-
+	*/
 }
