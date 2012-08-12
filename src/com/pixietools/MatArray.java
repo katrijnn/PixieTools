@@ -53,11 +53,7 @@ public class MatArray {
 								dataMatrix[chanEnergy][]
 							else 
 								continue;
-						}
-						
-						}
-						else 
-						{
+							myFile.rollbackPosition();
 							continue;
 						}
 					}
@@ -92,6 +88,55 @@ public class MatArray {
 		// Once you complete that procedure, you need to write the matrix to a binary
 		// file in a specific form.  You should look at how it is done for radware.  Radware
 		// uses 4096 by 4096 * 2 bytes.  Here is the website http://radware.phy.ornl.gov/faq.html#8.1
+	}
+
+	
+	private boolean getCompressedMatrix(int[][] oldMatrix, int[][] newMatrix)
+	{
+		// Define valid sizes
+		int[] validNewBinSizes = {1024, 2048, 4096};
+		boolean validBinSize = false;
+		
+		// Only compress matrices that were originally 32768 (for now)
+		if (oldMatrix.length != 32768)
+			return false;
+		
+		// Check all possible values of newBinSize
+		for (int i = 0; i < validNewBinSizes.length; i++)
+		{
+			if (validNewBinSizes[i] == newMatrix.length)
+			{
+				validBinSize = true;
+				break;
+			}
+		}
+
+		// If not valid in bin size, return false
+		if (!validBinSize)
+			return false;
+		
+		// Zero out newHistogram
+		for (int i = 0; i < newMatrix.length; i++)
+		{
+			for (int j=0; j < newMatrix[i].length; j++)
+			{
+				newMatrix[i][j] = 0;
+			}
+			
+		}
+		
+		// Get scaleFactor
+		double scaleFactor = ((double) newMatrix.length) / ((double) oldMatrix.length);
+		
+		// Create new histogram
+		for (int i = 0; i < oldMatrix.length; i++)
+		{
+			int newBini = (int)Math.floor(scaleFactor * (double)i);
+			int newBinj = (int)Math.floor(scaleFactor * (double)j);
+			newMatrix[newBini][newBinj] += oldMatrix[i][j];
+		}
+		
+		return true;
 	}
 
 }
