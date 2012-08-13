@@ -68,6 +68,8 @@ public class MatArray {
 					{
 						int chanNum = myFile.getEventChannel();	
 
+						// if hit is ch0, mark position in file, save time and energy
+						// then continue iterating through events
 						if (chanNum == 0)
 						{
 							myFile.markPosition();
@@ -79,6 +81,11 @@ public class MatArray {
 							// also, how to skip over event that has already been
 							// checked in ch1 (after rollback)
 						}
+						// if hit is ch1, save time and energy
+						// check if it is close enough to event in ch0
+						// to be coincident. If so, increment that element
+						// in matrix by 1
+						// then go back to hit in ch0 to search for other events
 						else if (chanNum == 1)
 						{
 							int ch1Energy = myFile.getEventEnergy();
@@ -86,22 +93,19 @@ public class MatArray {
 							if ((ch1Time - ch0Time) <= coinWind);
 							{
 								dataMatrix[ch0Energy][ch1Energy]++;
-							}	
-
-									
-								}
-							}
-						
+							}			
 						}
+					}	
+				}
 						myFile.rollbackPosition();
 						continue;
-					}
 			}
-			catch (Exception e)
-			{
-				System.out.println("An error has occured in getHistogram: " + e.getMessage());
-				myFile.close();
-			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("An error has occured in getHistogram: " + e.getMessage());
+			myFile.close();
+		}
 		
 		myFile.close();
 		
