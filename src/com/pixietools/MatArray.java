@@ -31,16 +31,10 @@ public class MatArray {
 		int userChanNum2 = 0;
 		String userNum_line2 = null;
 		
-		int time = 20;
+		int coinWind = 20;
 		
 		int moduleId = 0;
-		
-		
-		
-		
-		
-		
-		
+
 		try 
 		{	
 			
@@ -66,27 +60,32 @@ public class MatArray {
 					{
 						int chanNum = myFile.getEventChannel();
 						int chanEnergy = myFile.getEventEnergy();
-						double chanTime = myFile.getEventTime();
 	
-						
+
 						if (chanNum == 0)
 						{
 							myFile.markPosition();
-							double timeDifference = myFile.getEventTime() + time;
 							int ch0Energy = myFile.getEventEnergy();
-							
-						if (myFile.moveNextChannel())
-						{
-							if (timeDifference <= chanTime)
+							double ch0Time = myFile.getEventTime();
+							//continue;
+							if (myFile.moveNextChannel())
 							{
-								dataMatrix[ch0Energy][chanEnergy]++;
+								if (chanNum == 1)
+								{
+									int ch1Energy = myFile.getEventEnergy();
+									double ch1Time = myFile.getEventTime();
+									if ((ch1Time - ch0Time) <= coinWind);
+									{
+										dataMatrix[ch0Energy][ch1Energy]++;
+									}	
+
+									
+								}
 							}
-							else 
-								continue;
+						
 						}
-							myFile.rollbackPosition();
-							continue;
-						}
+						myFile.rollbackPosition();
+						continue;
 					}
 				}
 			}
@@ -124,7 +123,7 @@ public class MatArray {
 	private boolean getCompressedMatrix(int[][] oldMatrix, int[][] newMatrix)
 	{
 		// Define valid sizes
-		int[] validNewBinSizes = {1024, 2048, 4096};
+		int[] validNewBinSizes = {4096};
 		boolean validBinSize = false;
 		
 		// Only compress matrices that were originally 32768 (for now)
@@ -158,7 +157,7 @@ public class MatArray {
 		// Get scaleFactor
 		double scaleFactor = ((double) newMatrix.length) / ((double) oldMatrix.length);
 		
-		// Create new histogram
+		// Create new matrix
 		for (int i = 0; i < oldMatrix.length; i++)
 		{
 			int newBini = (int)Math.floor(scaleFactor * (double)i);
