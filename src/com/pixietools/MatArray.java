@@ -31,13 +31,22 @@ public class MatArray {
 		int userChanNum2 = 0;
 		String userNum_line2 = null;
 		
+		int coinWindow = 0;
+		String coinWindow_line = null;
+		
 		int coinWind = 20;
 		
 		int moduleId = 0;
 
 		try 
 		{	
+			System.out.println("Please enter desired coincidence window in nanoseconds: ");
+			BufferedReader coinWindow_reader = new BufferedReader(new InputStreamReader(System.in));
+			coinWindow_line = coinWindow_reader.readLine();
+			coinWindow = Integer.parseInt(coinWindow_line);
 			
+			
+			// FOR NOW JUST USING CH0, CH1
 			System.out.println("Please enter channel number between 0 and 3");
 			BufferedReader userChanNum_reader1 = new BufferedReader(new InputStreamReader(System.in));
 			userNum_line1 = userChanNum_reader1.readLine();
@@ -58,9 +67,7 @@ public class MatArray {
 				{
 					for (boolean bChannel = myFile.moveFirstChannel(); bChannel; bChannel = myFile.moveNextChannel())
 					{
-						int chanNum = myFile.getEventChannel();
-						int chanEnergy = myFile.getEventEnergy();
-	
+						int chanNum = myFile.getEventChannel();	
 
 						if (chanNum == 0)
 						{
@@ -68,6 +75,9 @@ public class MatArray {
 							int ch0Energy = myFile.getEventEnergy();
 							double ch0Time = myFile.getEventTime();
 							//continue;
+							// PROBLEM: how to continue iterating after first event
+							// also, how to skip over event that has already been
+							// checked in ch1 (after rollback)
 							if (myFile.moveNextChannel())
 							{
 								if (chanNum == 1)
