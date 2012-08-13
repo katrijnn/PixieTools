@@ -9,8 +9,6 @@ public class MatArray {
 	{
 		String binFilePath = "";
 		
-		
-		
 		PixieBinFile myFile = new PixieBinFile(binFilePath);
 		
 		int[][] dataMatrix = new int[4096][4096];
@@ -34,8 +32,10 @@ public class MatArray {
 		int coinWindow = 0;
 		String coinWindow_line = null;
 		
+		// initialize variables to be used in loops
 		int coinWind = 20;
-		
+		double ch0Time = 0;
+		int ch0Energy = 0;
 		int moduleId = 0;
 
 		try 
@@ -44,7 +44,6 @@ public class MatArray {
 			BufferedReader coinWindow_reader = new BufferedReader(new InputStreamReader(System.in));
 			coinWindow_line = coinWindow_reader.readLine();
 			coinWindow = Integer.parseInt(coinWindow_line);
-			
 			
 			// FOR NOW JUST USING CH0, CH1
 			System.out.println("Please enter channel number between 0 and 3");
@@ -72,22 +71,22 @@ public class MatArray {
 						if (chanNum == 0)
 						{
 							myFile.markPosition();
-							int ch0Energy = myFile.getEventEnergy();
-							double ch0Time = myFile.getEventTime();
+							ch0Energy = myFile.getEventEnergy();
+							ch0Time = myFile.getEventTime();
 							//continue;
+							
 							// PROBLEM: how to continue iterating after first event
 							// also, how to skip over event that has already been
 							// checked in ch1 (after rollback)
-							if (myFile.moveNextChannel())
+						}
+						else if (chanNum == 1)
+						{
+							int ch1Energy = myFile.getEventEnergy();
+							double ch1Time = myFile.getEventTime();
+							if ((ch1Time - ch0Time) <= coinWind);
 							{
-								if (chanNum == 1)
-								{
-									int ch1Energy = myFile.getEventEnergy();
-									double ch1Time = myFile.getEventTime();
-									if ((ch1Time - ch0Time) <= coinWind);
-									{
-										dataMatrix[ch0Energy][ch1Energy]++;
-									}	
+								dataMatrix[ch0Energy][ch1Energy]++;
+							}	
 
 									
 								}
@@ -97,14 +96,12 @@ public class MatArray {
 						myFile.rollbackPosition();
 						continue;
 					}
-				}
 			}
-		}
-		catch (Exception e)
-		{
-			System.out.println("An error has occured in getHistogram: " + e.getMessage());
-			myFile.close();
-		}
+			catch (Exception e)
+			{
+				System.out.println("An error has occured in getHistogram: " + e.getMessage());
+				myFile.close();
+			}
 		
 		myFile.close();
 		
