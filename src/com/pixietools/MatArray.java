@@ -1,5 +1,8 @@
 package com.pixietools;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 public class MatArray {
 
 	public static void main(String[] args) 
@@ -22,14 +25,35 @@ public class MatArray {
 		}
 		
 		// Determine which channels to compare
-		int ch0 = 0;
-		int ch1 = 1;
+		int userChanNum1 = 0;
+		String userNum_line1 = null;
+		
+		int userChanNum2 = 0;
+		String userNum_line2 = null;
 		
 		int time = 20;
+		
+		int moduleId = 0;
+		
+		
+		
+		
+		
 		
 		
 		try 
 		{	
+			
+			System.out.println("Please enter channel number between 0 and 3");
+			BufferedReader userChanNum_reader1 = new BufferedReader(new InputStreamReader(System.in));
+			userNum_line1 = userChanNum_reader1.readLine();
+			userChanNum1 = Integer.parseInt(userNum_line1);
+			
+			System.out.println("Please enter channel number between 0 and 3");
+			BufferedReader userChanNum_reader2 = new BufferedReader(new InputStreamReader(System.in));
+			userNum_line2 = userChanNum_reader2.readLine();
+			userChanNum2 = Integer.parseInt(userNum_line2);
+			
 			for (boolean bBuffer = myFile.moveFirstBuffer(); bBuffer; bBuffer = myFile.moveNextBuffer())
 			{
 				// Check to see if this buffer belongs to moduleId
@@ -42,17 +66,24 @@ public class MatArray {
 					{
 						int chanNum = myFile.getEventChannel();
 						int chanEnergy = myFile.getEventEnergy();
-						int chanTime = myFile.getEventTime();
+						double chanTime = myFile.getEventTime();
 	
 						
-						if chanNum == 0
+						if (chanNum == 0)
 						{
 							myFile.markPosition();
-							int timeDifference = myFile.getEventTime() + time;
-							if timeDifference <= chanTime
-								dataMatrix[chanEnergy][]
+							double timeDifference = myFile.getEventTime() + time;
+							int ch0Energy = myFile.getEventEnergy();
+							
+						if (myFile.moveNextChannel())
+						{
+							if (timeDifference <= chanTime)
+							{
+								dataMatrix[ch0Energy][chanEnergy]++;
+							}
 							else 
 								continue;
+						}
 							myFile.rollbackPosition();
 							continue;
 						}
@@ -64,7 +95,6 @@ public class MatArray {
 		{
 			System.out.println("An error has occured in getHistogram: " + e.getMessage());
 			myFile.close();
-			return false;
 		}
 		
 		myFile.close();
