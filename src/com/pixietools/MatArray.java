@@ -40,6 +40,8 @@ public class MatArray {
 		int chNum1Energy = 0;
 		int chNum2Energy = 0;
 
+		int scaleFactor = 1/8;
+		
 		int moduleId = 0;
 
 		try 
@@ -79,24 +81,24 @@ public class MatArray {
 							myFile.markPosition();
 							chNum1Energy = myFile.getEventEnergy();
 							chNum1Time = myFile.getEventTime();
-							//continue;
+							continue;
 							
 							// PROBLEM: how to continue iterating after first event
 							// also, how to skip over event that has already been
-							// checked in ch1 (after rollback)
+							// checked in second channel (after rollback)
 						}
-						// if hit is ch1, save time and energy
-						// check if it is close enough to event in ch0
+						// if hit is in first channel, save time and energy
+						// check if it is close enough to event in second channel
 						// to be coincident. If so, increment that element
 						// in matrix by 1
-						// then go back to hit in ch0 to search for other events
+						// then go back to hit in first channel to search for other events
 						if (chanNum == userChanNum2)
 						{
 							chNum2Energy = myFile.getEventEnergy();
 							chNum2Time = myFile.getEventTime();
 							if (Math.abs(chNum2Time - chNum1Time) <= coinWindow);
 							{
-								dataMatrix[chNum1Energy][chNum2Energy]++;
+								dataMatrix[(int)Math.floor(scaleFactor * (double)chNum1Energy)][(int)Math.floor(scaleFactor * (double)chNum2Energy)]++;
 							}			
 						}
 					}	
@@ -134,7 +136,7 @@ public class MatArray {
 		// uses 4096 by 4096 * 2 bytes.  Here is the website http://radware.phy.ornl.gov/faq.html#8.1
 	}
 
-	
+	/*
 	private boolean scaleMatrix(int[][] oldMatrix, int[][] newMatrix)
 	{
 		// Define valid sizes
@@ -144,7 +146,7 @@ public class MatArray {
 		// Only compress matrices that were originally 32768 (for now)
 		if (oldMatrix.length != 32768)
 			return false;
-		/*
+		
 		// Check all possible values of newBinSize
 		for (int i = 0; i < validNewBinSizes.length; i++)
 		{
@@ -158,7 +160,7 @@ public class MatArray {
 		// If not valid in bin size, return false
 		if (!validBinSize)
 			return false;
-		*/
+		
 		
 		
 		// PROBLEM: HOW TO SCALE VALUES BEFORE CREATING MATRIX?
@@ -188,5 +190,5 @@ public class MatArray {
 		}
 		return true;
 	}
-	
+	*/
 }
