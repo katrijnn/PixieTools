@@ -7,10 +7,11 @@ public class MatArray {
 
 	public static void main(String[] args) 
 	{
-		String binFilePath = "";
+		String binFilePath = "C://Users//kaatrin.a.netherton//Desktop//PixieTestFiles//co60.bin";
 		
 		PixieBinFile myFile = new PixieBinFile(binFilePath);
 		
+		// initialize matrix
 		int[][] dataMatrix = new int[4096][4096];
 		
 		// Zero out matrix
@@ -33,9 +34,11 @@ public class MatArray {
 		String coinWindow_line = null;
 		
 		// initialize variables to be used in loops
-		int coinWind = 20;
-		double ch0Time = 0;
-		int ch0Energy = 0;
+		double chNum1Time = 0;
+		double chNum2Time = 0;
+		int chNum1Energy = 0;
+		int chNum2Energy = 0;
+
 		int moduleId = 0;
 
 		try 
@@ -70,11 +73,11 @@ public class MatArray {
 
 						// if hit is ch0, mark position in file, save time and energy
 						// then continue iterating through events
-						if (chanNum == 0)
+						if (chanNum == userChanNum1)
 						{
 							myFile.markPosition();
-							ch0Energy = myFile.getEventEnergy();
-							ch0Time = myFile.getEventTime();
+							chNum1Energy = myFile.getEventEnergy();
+							chNum1Time = myFile.getEventTime();
 							//continue;
 							
 							// PROBLEM: how to continue iterating after first event
@@ -86,13 +89,13 @@ public class MatArray {
 						// to be coincident. If so, increment that element
 						// in matrix by 1
 						// then go back to hit in ch0 to search for other events
-						else if (chanNum == 1)
+						else if (chanNum == userChanNum2)
 						{
-							int ch1Energy = myFile.getEventEnergy();
-							double ch1Time = myFile.getEventTime();
-							if ((ch1Time - ch0Time) <= coinWind);
+							chNum2Energy = myFile.getEventEnergy();
+							chNum2Time = myFile.getEventTime();
+							if ((chNum2Time - chNum1Time) <= coinWindow);
 							{
-								dataMatrix[ch0Energy][ch1Energy]++;
+								dataMatrix[chNum1Energy][chNum2Energy]++;
 							}			
 						}
 					}	
@@ -130,8 +133,8 @@ public class MatArray {
 		// uses 4096 by 4096 * 2 bytes.  Here is the website http://radware.phy.ornl.gov/faq.html#8.1
 	}
 
-	/*
-	private boolean getCompressedMatrix(int[][] oldMatrix, int[][] newMatrix)
+	
+	private boolean scaleMatrix(int[][] oldMatrix, int[][] newMatrix)
 	{
 		// Define valid sizes
 		int[] validNewBinSizes = {4096};
@@ -140,7 +143,7 @@ public class MatArray {
 		// Only compress matrices that were originally 32768 (for now)
 		if (oldMatrix.length != 32768)
 			return false;
-		
+		/*
 		// Check all possible values of newBinSize
 		for (int i = 0; i < validNewBinSizes.length; i++)
 		{
@@ -154,6 +157,7 @@ public class MatArray {
 		// If not valid in bin size, return false
 		if (!validBinSize)
 			return false;
+		*/
 		
 		// Zero out newHistogram
 		for (int i = 0; i < newMatrix.length; i++)
@@ -171,12 +175,15 @@ public class MatArray {
 		// Create new matrix
 		for (int i = 0; i < oldMatrix.length; i++)
 		{
-			int newBini = (int)Math.floor(scaleFactor * (double)i);
-			int newBinj = (int)Math.floor(scaleFactor * (double)j);
-			newMatrix[newBini][newBinj] += oldMatrix[i][j];
+			for (int j = 0; j < oldMatrix[i].length; j++)
+			{
+				int newBini = (int)Math.floor(scaleFactor * (double)i);
+				int newBinj = (int)Math.floor(scaleFactor * (double)j);
+				newMatrix[newBini][newBinj] += oldMatrix[i][j];
+
+			}
 		}
-		
 		return true;
 	}
-	*/
+	
 }

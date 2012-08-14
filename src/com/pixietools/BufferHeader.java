@@ -11,6 +11,9 @@ public class BufferHeader
 	
 	public long binaryStartPosition = 0;
 	
+	
+	// this function is for use with the "mark position"
+	// and "rollback" function in PixieBinFile
 	public void copy(BufferHeader bh)
 	{
 		this.wordsInBuffer = bh.wordsInBuffer;

@@ -10,6 +10,9 @@ public class ChannelHeader
 	
 	public long binaryStartPosition = 0;
 	
+	
+	// this function is for use with the "mark position" 
+	// and "rollback" functions in PixieBinFile
 	public void copy(ChannelHeader ch)
 	{
 		this.channelNumber = ch.channelNumber;

@@ -13,6 +13,9 @@ public class EventHeader
 	public boolean channel2Hit = false;
 	public boolean channel3Hit = false;
 	
+	
+	// this function is for use with the "mark position"
+	// and "rollback" functions in PixieBinFile
 	public void copy(EventHeader eh)
 	{
 		this.eventPattern = eh.eventPattern;

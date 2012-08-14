@@ -598,6 +598,8 @@ public class PixieBinFile
 		return returnValue;
 	}
 	
+	// function to mark position of current event 
+	// so it can be returned to later
 	public void markPosition()
 	{
 		try
@@ -613,6 +615,8 @@ public class PixieBinFile
 		}
 	}
 	
+	// function to roll back to whatever position/event
+	// was marked by markPosition function
 	public void rollbackPosition()
 	{
 		try
