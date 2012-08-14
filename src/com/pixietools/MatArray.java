@@ -53,11 +53,15 @@ public class MatArray {
 		// initialize variables to be used in loops
 		double chNum1Time = 0;
 		double chNum2Time = 0;
-		int chNum1Energy = 0;
-		int chNum2Energy = 0;
-
+		double chNum1Energy = 0;
+		double chNum2Energy = 0;
+		
+		// scaleFactor allows the matrix to be 
+		//shrunk to a point where it does not
+		// produce terabytes of data
 		int scaleFactor = 1/8;
 		
+		// moduleId is the pixie card number
 		int moduleId = 0;
 
 		try 
@@ -93,7 +97,7 @@ public class MatArray {
 					{
 						int chanNum = myFile.getEventChannel();	
 
-						// if hit is ch0, mark position in file, save time and energy
+						// if hit is in first channel, mark position in file, save time and energy
 						// then continue iterating through events
 						if (chanNum == userChanNum1)
 						{
@@ -107,11 +111,11 @@ public class MatArray {
 							// checked in second channel (after rollback)
 						}
 						
-						// if hit is in first channel, save time and energy
-						// check if it is close enough to event in second channel
+						// if hit is in second channel, 
+						// check if hit is close enough to event in first channel
 						// to be coincident. If so, increment that element
-						// in matrix by 1
-						// then go back to hit in first channel to search for other events
+						// in matrix by 1 then go back to hit in first channel to 
+						// search for other events
 						
 						if (chanNum == userChanNum2)
 						{
