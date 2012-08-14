@@ -3,6 +3,17 @@ package com.pixietools;
 import java.text.DecimalFormat;
 import java.io.*;
 
+/* This program uses a data file with two inputs used (ie 166-Ho experiment). Whenever
+ * an channel hit is registered in ch0 (ex), that timestamp is saved in it's own variable. 
+ * Any channel hit registered in ch1 (ex) after this point has it's time subtracted from that
+ * variable, and the result is the time written to file of the event (e.g. all events in ch0 are 
+ * counted as "time = 0" and all events in ch1 are written as relative to time = 0.
+ * The program then writes each of the channel numbers (inputs), event times and energy readings
+ * to a text file. This can be modified so that only events in ch1 (ex) would be written to file
+ * instead of events from both ch0 and ch1. 
+ */
+
+
 public class MultiChannelScaler 
 {
 

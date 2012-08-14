@@ -2,6 +2,18 @@ package com.pixietools;
 
 import java.io.*;
 
+/* This program requests a channel number from the user, and gives the option to "compress"
+ * the data into a smaller format (ex from 32k voltage bins to 1024 voltage bins). 
+ * After gaining the channel number, it creates an array of length 32768 elements (the number
+ * of bins in a Pixie spectrum). Since the energies are listed in the data file in integer format,
+ * each time an energy (bin number) is read, the element in the array that corresponds to that bin number
+ * is incremented by 1, thus creating a histogram of data of the voltage bins. 
+ * If the user has requested compression, it uses a scale factor to 
+ * re-bin the data into a small format. The program then writes the data to a text file where it can 
+ * be immediately viewed using a graphics program. 
+ */
+
+
 public class HistArray 
 {
 	public static void main(String[] args)

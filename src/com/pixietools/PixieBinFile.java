@@ -6,6 +6,15 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+
+/* This program reads the information about each buffer, event and channel hit
+ * and stores them all in variables. These variables are used later in functions 
+ * to determine the energy and time of a channel hit; also other information such
+ * as module number, channel number, etc. 
+ * Each function has a short descriptor of its purpose
+ */
+
+
 public class PixieBinFile 
 {
 	// set up to get file path, and use random access
