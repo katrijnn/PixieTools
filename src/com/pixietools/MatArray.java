@@ -1,6 +1,7 @@
 package com.pixietools;
 
 import java.io.BufferedReader;
+import java.lang.Math;
 import java.io.InputStreamReader;
 
 public class MatArray {
@@ -89,11 +90,11 @@ public class MatArray {
 						// to be coincident. If so, increment that element
 						// in matrix by 1
 						// then go back to hit in ch0 to search for other events
-						else if (chanNum == userChanNum2)
+						if (chanNum == userChanNum2)
 						{
 							chNum2Energy = myFile.getEventEnergy();
 							chNum2Time = myFile.getEventTime();
-							if ((chNum2Time - chNum1Time) <= coinWindow);
+							if (Math.abs(chNum2Time - chNum1Time) <= coinWindow);
 							{
 								dataMatrix[chNum1Energy][chNum2Energy]++;
 							}			
