@@ -159,6 +159,8 @@ public class MatArray {
 			return false;
 		*/
 		
+		
+		// PROBLEM: HOW TO SCALE VALUES BEFORE CREATING MATRIX?
 		// Zero out newHistogram
 		for (int i = 0; i < newMatrix.length; i++)
 		{
