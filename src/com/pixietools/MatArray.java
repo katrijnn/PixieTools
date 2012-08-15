@@ -135,13 +135,14 @@ public class MatArray
 		this._dataFilePath = dataFilePath;
 	}
 	
-	public int[][] getDetectorVsDetectorMatrix(int ch1, int ch2, int module)
+	public int[][] getDetectorVsDetectorMatrix(int ch1, int ch2, int module, double coinWindow)
 	{
 		int[][] dataMatrix = null;
 		int[] validMatrixBins = {4096};
 		boolean matrixBinsValid = false;
 		double energyScale = 0;
 		boolean iterateForward = false;
+		boolean iterateReturn = false;
 		int iterateChannel = -1;
 		double iterateStart = 0.0;
 		int iterateEnergy = 0;
@@ -188,7 +189,15 @@ public class MatArray
 			{
 				for (boolean bChannel = dataFile.moveFirstChannel(); bChannel; bChannel = dataFile.moveNextChannel())
 				{
-					int chanNum = dataFile.getEventChannel();	
+					// If returning from an iteration, skip to next event
+					if (iterateReturn)
+					{
+						iterateReturn = false;
+						continue;
+					}
+					
+					int chanNum = dataFile.getEventChannel();
+					double eventTime = dataFile.getBufferTime();
 
 					// Get info for first hit
 					if (!iterateForward && (chanNum == ch1 || chanNum == ch2))
@@ -201,52 +210,42 @@ public class MatArray
 						continue;
 					}
 					
+					// Check to see if in time window
+					if (iterateForward && ((eventTime - iterateStart) > coinWindow))
+					{
+						iterateReturn = true;
+						iterateForward = false;
+						iterateChannel = -1;
+						iterateStart = 0;
+						iterateEnergy = 0;
+						
+						dataFile.rollbackPosition();
+						
+						continue;
+					}
+					
 					if (iterateForward && 
 						chanNum == ch2 && 
 						iterateChannel == ch1)
 					{
+						int energyCh1 = (int)Math.floor(energyScale * (double)iterateEnergy);
+						int energyCh2 = (int)Math.floor(energyScale * (double)dataFile.getEventEnergy());
 						
+						dataMatrix[energyCh1][energyCh2]++;
 					}
 					
 					if (iterateForward && 
 						chanNum == ch1 && 
 						iterateChannel == ch2)
 					{
+						int energyCh1 = (int)Math.floor(energyScale * (double)dataFile.getEventEnergy());
+						int energyCh2 = (int)Math.floor(energyScale * (double)iterateEnergy);
 						
+						dataMatrix[energyCh1][energyCh2]++;
 					}
 					
-//					// if hit is in first channel, mark position in file, save time and energy
-//					// then continue iterating through events
-//					if (chanNum == userChanNum1)
-//					{
-//						myFile.markPosition();
-//						chNum1Energy = myFile.getEventEnergy();
-//						chNum1Time = myFile.getEventTime();
-//						continue;
-//						
-//						// PROBLEM: how to continue iterating after first event
-//						// also, how to skip over event that has already been
-//						// checked in second channel (after rollback)
-//					}
-//					
-//					// if hit is in second channel, 
-//					// check if hit is close enough to event in first channel
-//					// to be coincident. If so, increment that element
-//					// in matrix by 1 then go back to hit in first channel to 
-//					// search for other events
-//					
-//					if (chanNum == userChanNum2)
-//					{
-//						chNum2Energy = myFile.getEventEnergy();
-//						chNum2Time = myFile.getEventTime();
-//						if (Math.abs(chNum2Time - chNum1Time) <= coinWindow);
-//						{
-//							dataMatrix[(int)Math.floor(scaleFactor * (double)chNum1Energy)][(int)Math.floor(scaleFactor * (double)chNum2Energy)]++;
-//						}			
-//					}
-//					
-//					myFile.rollbackPosition();
-//					continue;
+					
+					// We will still need to handle the case where we hit the end of the file....
 				}	
 			}	
 		}
@@ -257,7 +256,7 @@ public class MatArray
 	
 	private int scaleEnergy(double scaleFactor, int energy)
 	{
-		return (int)Math.floor(scaleFactor * (double)energy);
+		return 
 	}
 	
 }
