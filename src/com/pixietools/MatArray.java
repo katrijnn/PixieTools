@@ -19,25 +19,20 @@ When the matrix (4069 x 4069 elements) is filled, the program writes it to a fil
 */
 
 
-public class MatArray {
-
+public class MatArray 
+{
+	int _matrixBins = 4096; // default
+	String _dataFilePath = "";
+	
 	public static void main(String[] args) 
 	{
 		String binFilePath = "C://Users//kaatrin.a.netherton//Desktop//PixieTestFiles//co60.bin";
 		
-		PixieBinFile myFile = new PixieBinFile(binFilePath);
 		
-		// initialize matrix
-		int[][] dataMatrix = new int[4096][4096];
 		
-		// Zero out matrix
-		for (int i = 0; i < dataMatrix.length; i++)
-		{
-			for (int j = 0; j < dataMatrix[i].length; j++)
-			{
-				dataMatrix[i][j] = 0;
-			}
-		}
+		
+		
+		
 		
 		// Initialize channels to compare
 		// Initialize coincidence window;
@@ -84,53 +79,7 @@ public class MatArray {
 			userNum_line2 = userChanNum_reader2.readLine();
 			userChanNum2 = Integer.parseInt(userNum_line2);
 			
-			// begin to iterate through buffers, events, etc. 
-			for (boolean bBuffer = myFile.moveFirstBuffer(); bBuffer; bBuffer = myFile.moveNextBuffer())
-			{
-				// Check to see if this buffer belongs to moduleId
-				if (myFile.getBufferModuleNumber() != moduleId)
-					continue;
-				
-				for (boolean bEvent = myFile.moveFirstEvent(); bEvent; bEvent = myFile.moveNextEvent())
-				{
-					for (boolean bChannel = myFile.moveFirstChannel(); bChannel; bChannel = myFile.moveNextChannel())
-					{
-						int chanNum = myFile.getEventChannel();	
-
-						// if hit is in first channel, mark position in file, save time and energy
-						// then continue iterating through events
-						if (chanNum == userChanNum1)
-						{
-							myFile.markPosition();
-							chNum1Energy = myFile.getEventEnergy();
-							chNum1Time = myFile.getEventTime();
-							continue;
-							
-							// PROBLEM: how to continue iterating after first event
-							// also, how to skip over event that has already been
-							// checked in second channel (after rollback)
-						}
-						
-						// if hit is in second channel, 
-						// check if hit is close enough to event in first channel
-						// to be coincident. If so, increment that element
-						// in matrix by 1 then go back to hit in first channel to 
-						// search for other events
-						
-						if (chanNum == userChanNum2)
-						{
-							chNum2Energy = myFile.getEventEnergy();
-							chNum2Time = myFile.getEventTime();
-							if (Math.abs(chNum2Time - chNum1Time) <= coinWindow);
-							{
-								dataMatrix[(int)Math.floor(scaleFactor * (double)chNum1Energy)][(int)Math.floor(scaleFactor * (double)chNum2Energy)]++;
-							}			
-						}
-					}	
-				}
-						myFile.rollbackPosition();
-						continue;
-			}
+			
 		}
 		catch (Exception e)
 		{
@@ -160,60 +109,155 @@ public class MatArray {
 		// file in a specific form.  You should look at how it is done for radware.  Radware
 		// uses 4096 by 4096 * 2 bytes.  Here is the website http://radware.phy.ornl.gov/faq.html#8.1
 	}
-
-	/*
-	private boolean scaleMatrix(int[][] oldMatrix, int[][] newMatrix)
+	
+	public int getMatrixBins() 
 	{
-		// Define valid sizes
-		int[] validNewBinSizes = {4096};
-		boolean validBinSize = false;
+		return _matrixBins;
+	}
+
+	public void setMatrixBins(int matrixBins) 
+	{
+		this._matrixBins = matrixBins;
+	}
+	
+	public double getEnergyScale()
+	{
+		return (double)_matrixBins / (double)32768;
+	}
+	
+	public String getDataFilePath()
+	{
+		return _dataFilePath;
+	}
+	
+	public void setDataFilePath(String dataFilePath)
+	{
+		this._dataFilePath = dataFilePath;
+	}
+	
+	public int[][] getDetectorVsDetectorMatrix(int ch1, int ch2, int module)
+	{
+		int[][] dataMatrix = null;
+		int[] validMatrixBins = {4096};
+		boolean matrixBinsValid = false;
+		double energyScale = 0;
+		boolean iterateForward = false;
+		int iterateChannel = -1;
+		double iterateStart = 0.0;
+		int iterateEnergy = 0;
 		
-		// Only compress matrices that were originally 32768 (for now)
-		if (oldMatrix.length != 32768)
-			return false;
-		
-		// Check all possible values of newBinSize
-		for (int i = 0; i < validNewBinSizes.length; i++)
+		// Check to see if _matrixBins is valid
+		for (int i = 0; i < validMatrixBins.length; i++)
 		{
-			if (validNewBinSizes[i] == newMatrix.length)
+			if (validMatrixBins[i] == _matrixBins)
 			{
-				validBinSize = true;
+				matrixBinsValid = true;
 				break;
 			}
 		}
-
-		// If not valid in bin size, return false
-		if (!validBinSize)
-			return false;
 		
+		// Check to see if valid size
+		if (!matrixBinsValid)
+			return dataMatrix;
 		
+		energyScale = getEnergyScale();
 		
-		// PROBLEM: HOW TO SCALE VALUES BEFORE CREATING MATRIX?
-		// Zero out newHistogram
-		for (int i = 0; i < newMatrix.length; i++)
+		// Create matrix of proper size
+		dataMatrix = new int[_matrixBins][_matrixBins];
+		
+		// Zero out matrix
+		for (int i = 0; i < dataMatrix.length; i++)
 		{
-			for (int j=0; j < newMatrix[i].length; j++)
+			for (int j = 0; j < dataMatrix[i].length; j++)
 			{
-				newMatrix[i][j] = 0;
+				dataMatrix[i][j] = 0;
 			}
+		}
+		
+		// Get data file
+		PixieBinFile dataFile = new PixieBinFile(_dataFilePath);
+		
+		// Iterate through every event and build matrix
+		for (boolean bBuffer = dataFile.moveFirstBuffer(); bBuffer; bBuffer = dataFile.moveNextBuffer())
+		{
+			// Check to see if this buffer belongs to moduleId
+			if (dataFile.getBufferModuleNumber() != module)
+				continue;
 			
-		}
-		
-		// Get scaleFactor
-		double scaleFactor = ((double) newMatrix.length) / ((double) oldMatrix.length);
-		
-		// Create new matrix
-		for (int i = 0; i < oldMatrix.length; i++)
-		{
-			for (int j = 0; j < oldMatrix[i].length; j++)
+			for (boolean bEvent = dataFile.moveFirstEvent(); bEvent; bEvent = dataFile.moveNextEvent())
 			{
-				int newBini = (int)Math.floor(scaleFactor * (double)i);
-				int newBinj = (int)Math.floor(scaleFactor * (double)j);
-				newMatrix[newBini][newBinj] += oldMatrix[i][j];
+				for (boolean bChannel = dataFile.moveFirstChannel(); bChannel; bChannel = dataFile.moveNextChannel())
+				{
+					int chanNum = dataFile.getEventChannel();	
 
-			}
+					// Get info for first hit
+					if (!iterateForward && (chanNum == ch1 || chanNum == ch2))
+					{
+						iterateChannel = chanNum;
+						iterateForward = true;
+						iterateStart = dataFile.getBufferTime();
+						iterateEnergy = dataFile.getEventEnergy();
+						dataFile.markPosition();
+						continue;
+					}
+					
+					if (iterateForward && 
+						chanNum == ch2 && 
+						iterateChannel == ch1)
+					{
+						
+					}
+					
+					if (iterateForward && 
+							chanNum == ch2 && 
+							iterateChannel == ch1)
+					{
+						
+					}
+					
+//					// if hit is in first channel, mark position in file, save time and energy
+//					// then continue iterating through events
+//					if (chanNum == userChanNum1)
+//					{
+//						myFile.markPosition();
+//						chNum1Energy = myFile.getEventEnergy();
+//						chNum1Time = myFile.getEventTime();
+//						continue;
+//						
+//						// PROBLEM: how to continue iterating after first event
+//						// also, how to skip over event that has already been
+//						// checked in second channel (after rollback)
+//					}
+//					
+//					// if hit is in second channel, 
+//					// check if hit is close enough to event in first channel
+//					// to be coincident. If so, increment that element
+//					// in matrix by 1 then go back to hit in first channel to 
+//					// search for other events
+//					
+//					if (chanNum == userChanNum2)
+//					{
+//						chNum2Energy = myFile.getEventEnergy();
+//						chNum2Time = myFile.getEventTime();
+//						if (Math.abs(chNum2Time - chNum1Time) <= coinWindow);
+//						{
+//							dataMatrix[(int)Math.floor(scaleFactor * (double)chNum1Energy)][(int)Math.floor(scaleFactor * (double)chNum2Energy)]++;
+//						}			
+//					}
+//					
+//					myFile.rollbackPosition();
+//					continue;
+				}	
+			}	
 		}
-		return true;
+		
+		
+		return dataMatrix;
 	}
-	*/
+	
+	private int scaleEnergy(double scaleFactor, int energy)
+	{
+		return (int)Math.floor(scaleFactor * (double)energy);
+	}
+	
 }
