@@ -84,10 +84,10 @@ public class MatArray
 		catch (Exception e)
 		{
 			System.out.println("An error has occured in getHistogram: " + e.getMessage());
-			myFile.close();
+			dataFile.close();
 		}
 		
-		myFile.close();
+		dataFile.close();
 		
 		
 		// iterate each event in PixieBinFile
@@ -256,7 +256,7 @@ public class MatArray
 	
 	private int scaleEnergy(double scaleFactor, int energy)
 	{
-		return 
+		return energy;
 	}
 	
 }
