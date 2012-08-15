@@ -209,8 +209,8 @@ public class MatArray
 					}
 					
 					if (iterateForward && 
-							chanNum == ch2 && 
-							iterateChannel == ch1)
+						chanNum == ch1 && 
+						iterateChannel == ch2)
 					{
 						
 					}
