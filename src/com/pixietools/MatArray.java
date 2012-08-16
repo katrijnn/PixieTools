@@ -78,18 +78,17 @@ public class MatArray
 			userChanNum2 = Integer.parseInt(userNum_line2);
 
 			
-			
 			matar.getDetectorVsDetectorMatrix(userChanNum1, userChanNum2, moduleId, coinWindow);
 			
-			matar.writeDataMatrixToFile(dataMatrix);
+			//matar.writeDataMatrixToFile(dataMatrix);
 		}
 		catch (Exception e)
 		{
 			System.out.println("An error has occured in getHistogram: " + e.getMessage());
-			dataFile.close();
+			//dataFile.close();
 		}
 		
-		dataFile.close();
+		//dataFile.close();
 		
 		
 		// iterate each event in PixieBinFile
@@ -251,7 +250,7 @@ public class MatArray
 				}	
 			}	
 		}
-		
+		dataFile.close();
 		
 		return dataMatrix;
 	}
