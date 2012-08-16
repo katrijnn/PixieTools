@@ -1,6 +1,8 @@
 package com.pixietools;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.Math;
 import java.io.InputStreamReader;
 
@@ -28,12 +30,8 @@ public class MatArray
 	{
 		String binFilePath = "C://Users//kaatrin.a.netherton//Desktop//PixieTestFiles//co60.bin";
 		
-		
-		
-		
-		
-		
-		
+		MatArray matar = new MatArray();
+	
 		// Initialize channels to compare
 		// Initialize coincidence window;
 		int userChanNum1 = 0;
@@ -78,8 +76,12 @@ public class MatArray
 			BufferedReader userChanNum_reader2 = new BufferedReader(new InputStreamReader(System.in));
 			userNum_line2 = userChanNum_reader2.readLine();
 			userChanNum2 = Integer.parseInt(userNum_line2);
+
 			
 			
+			matar.getDetectorVsDetectorMatrix(userChanNum1, userChanNum2, moduleId, coinWindow);
+			
+			matar.writeDataMatrixToFile(dataMatrix);
 		}
 		catch (Exception e)
 		{
@@ -252,6 +254,32 @@ public class MatArray
 		
 		
 		return dataMatrix;
+	}
+	
+	public void writeDataMatrixToFile(int[][] dataMatrix)
+	{
+		try
+		{
+			FileOutputStream fos = new FileOutputStream("C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix_out.txt");
+			OutputStreamWriter matOut = new OutputStreamWriter(fos, "UTF-8");
+			
+			for (int i=0; i < dataMatrix.length; i++)
+			{
+				for (int j=0; j < dataMatrix[i].length; j++)
+				{
+					matOut.write(String.valueOf(dataMatrix[i][j]) + " ");
+
+				}
+				matOut.write("\n");
+			}
+			matOut.close();
+
+
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error ocurred in writeMatrixToFile " + e.getMessage());
+		}
 	}
 	
 	private int scaleEnergy(double scaleFactor, int energy)
