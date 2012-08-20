@@ -77,10 +77,11 @@ public class MatArray
 			userNum_line2 = userChanNum_reader2.readLine();
 			userChanNum2 = Integer.parseInt(userNum_line2);
 
-			
+			// getDetectorVsDetectorMatrix returns dataMatrix
 			matar.getDetectorVsDetectorMatrix(userChanNum1, userChanNum2, moduleId, coinWindow);
 			
-			//matar.writeDataMatrixToFile(dataMatrix);
+
+		//	matar.writeDataMatrixToFile(dataMatrix);
 		}
 		catch (Exception e)
 		{
@@ -118,6 +119,7 @@ public class MatArray
 
 	public void setMatrixBins(int matrixBins) 
 	{
+		// _matrixBins is local copy of original _matrixBins
 		this._matrixBins = matrixBins;
 	}
 	
@@ -148,7 +150,7 @@ public class MatArray
 		double iterateStart = 0.0;
 		int iterateEnergy = 0;
 		
-		// Check to see if _matrixBins is valid
+		// Check to see if _matrixBins is valid (a length in the array)
 		for (int i = 0; i < validMatrixBins.length; i++)
 		{
 			if (validMatrixBins[i] == _matrixBins)
@@ -255,18 +257,18 @@ public class MatArray
 		return dataMatrix;
 	}
 	
-	public void writeDataMatrixToFile(int[][] dataMatrix)
+	public void writeDataMatrixToFile(int[][] matrix)
 	{
 		try
 		{
 			FileOutputStream fos = new FileOutputStream("C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix_out.txt");
 			OutputStreamWriter matOut = new OutputStreamWriter(fos, "UTF-8");
 			
-			for (int i=0; i < dataMatrix.length; i++)
+			for (int i=0; i < matrix.length; i++)
 			{
-				for (int j=0; j < dataMatrix[i].length; j++)
+				for (int j=0; j < matrix[i].length; j++)
 				{
-					matOut.write(String.valueOf(dataMatrix[i][j]) + " ");
+					matOut.write(String.valueOf(matrix[i][j]) + " ");
 
 				}
 				matOut.write("\n");
