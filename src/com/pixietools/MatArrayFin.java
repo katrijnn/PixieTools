@@ -8,37 +8,43 @@ import java.io.InputStreamReader;
 
 public class MatArrayFin 
 {
+	// 4096 bins is normal for RadWare
 	int _matrixBins = 4096; // default
 	
 	public static void main(String[] args)
 	{
-		MatArrayFin matar = new MatArrayFin();
-
+		
+		// path of data file
 		String _dataFilePath = "C://Users/kaatrin.a.netherton//Desktop//PixieTestFiles//co60.bin";
 		
 		// Get data file
 		PixieBinFile dataFile = new PixieBinFile(_dataFilePath);
-							
-		int[][] dataMatrix = null;
-		
-		
-		// Initialize channels to compare
-		// Initialize coincidence window;
-		
-		// moduleId is the pixie card number
-		int moduleId = 0;
 				
 		try
 		{
+			MatArrayFin matar = new MatArrayFin();
+
+			// SETTING/INITIALIZING VARIABLES, PATHS, ETC. 
+		
+			// initialize data matrix here
+			int[][] dataMatrix = null;
+
+			// moduleId is the pixie card number
+			int moduleId = 0;
+						
+			// initialize variables for user preferences
 			int userChanNum1 = 0;
 			String userNum_line1 = null;
 					
 			int userChanNum2 = 0;
 			String userNum_line2 = null;
-					
+						
 			int coinWindow = 0;
 			String coinWindow_line = null;
+				
+			// GETTING USER PREFERENCES
 			
+			// determine coincidence window to be used
 			System.out.println("Please enter desired coincidence window in nanoseconds: ");
 			BufferedReader coinWindow_reader = new BufferedReader(new InputStreamReader(System.in));
 			coinWindow_line = coinWindow_reader.readLine();
@@ -55,15 +61,29 @@ public class MatArrayFin
 			BufferedReader userChanNum_reader2 = new BufferedReader(new InputStreamReader(System.in));
 			userNum_line2 = userChanNum_reader2.readLine();
 			userChanNum2 = Integer.parseInt(userNum_line2);
-					
-			String outPath01 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Matrix01_out.txt";
-			String outPath02 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Matrix02_out.txt";
-			String outPath03 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Matrix03_out.txt";
-			String outPath12 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Matrix12_out.txt";
-			String outPath13 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Matrix13_out.txt";
-			String outPath23 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Matrix23_out.txt";
 			
 			
+			// CREATING MATRIX
+			
+			// as long as same two numbers not input
+			if (userChanNum1 != userChanNum2)
+			{
+				if (!matar.createMatrix(_dataFilePath, moduleId, dataMatrix, userChanNum1, userChanNum2, coinWindow))
+					return;
+				
+			}
+
+			// PRINTING MATRIX TO FILE
+			
+			// various outpaths depending on desired channels
+			String outPath01 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix01_out.txt";
+			String outPath02 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix02_out.txt";
+			String outPath03 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix03_out.txt";
+			String outPath12 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix12_out.txt";
+			String outPath13 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix13_out.txt";
+			String outPath23 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix23_out.txt";
+				
+				
 			if (userChanNum1 == 0 && userChanNum2 == 1)
 				matar.writeMatrixToAsciiFile(outPath01, dataMatrix);
 			else if (userChanNum1 == 0 && userChanNum2 == 2)
@@ -77,6 +97,7 @@ public class MatArrayFin
 			else if (userChanNum1 == 2 && userChanNum2 == 3)
 				matar.writeMatrixToAsciiFile(outPath23, dataMatrix);
 
+			
 		}
 		catch (Exception e)
 		{
@@ -102,7 +123,7 @@ public class MatArrayFin
 				matOut.write("\n");
 			}
 			matOut.close();
-
+			fos.close();
 
 		}
 		catch (Exception e)
@@ -146,10 +167,13 @@ public class MatArrayFin
 			if (!matrixBinsValid)
 				return false;
 									
-								
+			// since energy functions as the number of array elements, this needs to
+			// be scaled down to 4096 bins that we are attempting to stick with
 			double energyScaleFactor = 1/8;
 								
 			// Create matrix of proper size
+			// if we ever want a larger/smaller
+			// bin number change at top: _matrixBins
 			dataMatrix = new int[_matrixBins][_matrixBins];
 								
 			// Zero out matrix
@@ -224,9 +248,7 @@ public class MatArrayFin
 												
 							dataMatrix[energyCh1][energyCh2]++;
 						}
-											
-											
-						// We will still need to handle the case where we hit the end of the file....
+
 					}	
 				}	
 			}
@@ -240,5 +262,4 @@ public class MatArrayFin
 		
 		return true;
 	}
-	
 }
