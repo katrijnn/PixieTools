@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 
 public class MatArrayFin 
 {
-	
 	int _matrixBins = 4096; // default
 	
 	public static void main(String[] args)
@@ -32,11 +31,31 @@ public class MatArrayFin
 		try
 		{
 			int userChanNum1 = 0;
-			int userChanNum2 = 0;
-			int coinWindow = 0;
+			String userNum_line1 = null;
 					
+			int userChanNum2 = 0;
+			String userNum_line2 = null;
+					
+			int coinWindow = 0;
+			String coinWindow_line = null;
 			
-			
+			System.out.println("Please enter desired coincidence window in nanoseconds: ");
+			BufferedReader coinWindow_reader = new BufferedReader(new InputStreamReader(System.in));
+			coinWindow_line = coinWindow_reader.readLine();
+			coinWindow = Integer.parseInt(coinWindow_line);
+					
+			// get first channel to view
+			System.out.println("Please enter first channel number (between 0 and 3)");
+			BufferedReader userChanNum_reader1 = new BufferedReader(new InputStreamReader(System.in));
+			userNum_line1 = userChanNum_reader1.readLine();
+			userChanNum1 = Integer.parseInt(userNum_line1);
+					
+			// get second channel to view
+			System.out.println("Please enter second channel number (between 0 and 3");
+			BufferedReader userChanNum_reader2 = new BufferedReader(new InputStreamReader(System.in));
+			userNum_line2 = userChanNum_reader2.readLine();
+			userChanNum2 = Integer.parseInt(userNum_line2);
+					
 			String outPath01 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Matrix01_out.txt";
 			String outPath02 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Matrix02_out.txt";
 			String outPath03 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Matrix03_out.txt";
@@ -44,8 +63,6 @@ public class MatArrayFin
 			String outPath13 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Matrix13_out.txt";
 			String outPath23 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\Matrix23_out.txt";
 			
-			
-			matar.getUserPref(userChanNum1, userChanNum2, coinWindow);
 			
 			if (userChanNum1 == 0 && userChanNum2 == 1)
 				matar.writeMatrixToAsciiFile(outPath01, dataMatrix);
@@ -223,44 +240,5 @@ public class MatArrayFin
 		
 		return true;
 	}
-	
-	
-	private boolean getUserPref(int chanNum1, int chanNum2, int coinWindow)
-	{
-		chanNum1 = 0;
-		String userNum_line1 = null;
-				
-		chanNum2 = 0;
-		String userNum_line2 = null;
-				
-		coinWindow = 0;
-		String coinWindow_line = null;
-		
-		try
-		{
-			System.out.println("Please enter desired coincidence window in nanoseconds: ");
-			BufferedReader coinWindow_reader = new BufferedReader(new InputStreamReader(System.in));
-			coinWindow_line = coinWindow_reader.readLine();
-			coinWindow = Integer.parseInt(coinWindow_line);
-					
-			// get first channel to view
-			System.out.println("Please enter first channel number (between 0 and 3)");
-			BufferedReader userChanNum_reader1 = new BufferedReader(new InputStreamReader(System.in));
-			userNum_line1 = userChanNum_reader1.readLine();
-			userChanNum1 = Integer.parseInt(userNum_line1);
-					
-			// get second channel to view
-			System.out.println("Please enter second channel number (between 0 and 3");
-			BufferedReader userChanNum_reader2 = new BufferedReader(new InputStreamReader(System.in));
-			userNum_line2 = userChanNum_reader2.readLine();
-			userChanNum2 = Integer.parseInt(userNum_line2);
-		}
-		catch (Exception e)
-		{
-			System.out.println("Error occurred in getUserPrefs! " + e.getMessage());
-		}	
-		return true;
-	}
-	
 	
 }
