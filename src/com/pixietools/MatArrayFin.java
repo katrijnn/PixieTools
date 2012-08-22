@@ -15,6 +15,7 @@ public class MatArrayFin
 	{
 		
 		// THIS IS A TEST
+		// THIS IS ALSO A TEST
 		
 		// path of data file
 		String _dataFilePath = "C://Users/kaatrin.a.netherton//Desktop//PixieTestFiles//co60.bin";
