@@ -14,7 +14,7 @@ public class BinToAscii
 	public static void main(String[] args) 
 	{		
 		// insert bin file name here
-		PixieBinFile myFile = new PixieBinFile("C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\test_file_0004.bin");
+		PixieBinFile myFile = new PixieBinFile("C:\\Users\\Katrijn\\Desktop\\PixieTestFiles\\MatrixTestFile0001.bin");
 		// for testing use test_file_0010.bin 
 		// this file is a ramp-up of voltages, there is not error within it (some test files have errors)
 		myFile.open();
@@ -24,11 +24,11 @@ public class BinToAscii
 			System.out.println("Starting read...");
 			
 			// insert file output name here
-			FileOutputStream fos = new FileOutputStream("C:\\Users\\Katrijn\\Desktop\\out.txt");
+			FileOutputStream fos = new FileOutputStream("C:\\Users\\Katrijn\\Desktop\\MatrixTestOut.txt");
 			OutputStreamWriter out = new OutputStreamWriter(fos, "UTF-8");
 					
 			// Create header
-			out.write("Module\tChannel\tEvent Time (Ns)\tEnergy (bin)" + "\n");
+			out.write("Module\tChannel\tEvent Time \tEnergy (bin)" + "\n");
 			out.write("----------------------------------------------------------------------");
 			out.write("\n\n");
 
@@ -56,7 +56,7 @@ public class BinToAscii
 						out.write("\t\t");
 						out.write(String.valueOf(myFile.getEventChannel()));
 						out.write("\t\t");
-						out.write(String.valueOf(dFormat.format(myFile.getEventTimeNs())));
+						out.write(String.valueOf(dFormat.format(myFile.getEventTime())));
 						out.write("\t\t\t");
 						out.write(String.valueOf(myFile.getEventEnergy()));
 						out.write("\n");

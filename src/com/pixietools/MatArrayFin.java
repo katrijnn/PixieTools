@@ -14,17 +14,21 @@ public class MatArrayFin
 	public static void main(String[] args)
 	{
 		
+
+		
 		// THIS IS A TEST
-		// THIS IS ALSO A TEST
 		
 		// path of data file
-		String _dataFilePath = "C://Users/kaatrin.a.netherton//Desktop//PixieTestFiles//co60.bin";
+		String _dataFilePath = "C:/Users/Katrijn//Desktop/PixieTestFiles/co60.bin";
 		
 		// Get data file
 		PixieBinFile dataFile = new PixieBinFile(_dataFilePath);
 				
 		try
 		{
+			
+			System.out.println("Starting...");
+			
 			MatArrayFin matar = new MatArrayFin();
 
 			// SETTING/INITIALIZING VARIABLES, PATHS, ETC. 
@@ -32,6 +36,10 @@ public class MatArrayFin
 			// initialize data matrix here
 			int[][] dataMatrix = null;
 
+			// FIX THIS SOMETIME SO CAN USE MATRIXBINS
+			dataMatrix = new int[4096][4096];
+
+			
 			// moduleId is the pixie card number
 			int moduleId = 0;
 						
@@ -48,7 +56,7 @@ public class MatArrayFin
 			// GETTING USER PREFERENCES
 			
 			// determine coincidence window to be used
-			System.out.println("Please enter desired coincidence window in nanoseconds: ");
+			System.out.println("Please enter desired coincidence window in nanoseconds (integers only!): ");
 			BufferedReader coinWindow_reader = new BufferedReader(new InputStreamReader(System.in));
 			coinWindow_line = coinWindow_reader.readLine();
 			coinWindow = Integer.parseInt(coinWindow_line);
@@ -68,23 +76,27 @@ public class MatArrayFin
 			
 			// CREATING MATRIX
 			
+			System.out.println("Got here");
+			
 			// as long as same two numbers not input
 			if (userChanNum1 != userChanNum2)
 			{
+				System.out.println("Got into here");
 				if (!matar.createMatrix(_dataFilePath, moduleId, dataMatrix, userChanNum1, userChanNum2, coinWindow))
 					return;
-				
 			}
 
+			
+			
 			// PRINTING MATRIX TO FILE
 			
 			// various outpaths depending on desired channels
-			String outPath01 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix01_out.txt";
-			String outPath02 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix02_out.txt";
-			String outPath03 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix03_out.txt";
-			String outPath12 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix12_out.txt";
-			String outPath13 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix13_out.txt";
-			String outPath23 = "C:\\Users\\kaatrin.a.netherton\\Desktop\\PixieOutFiles\\dataMatrix23_out.txt";
+			String outPath01 = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\dataMatrix01_out.txt";
+			String outPath02 = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\dataMatrix02_out.txt";
+			String outPath03 = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\dataMatrix03_out.txt";
+			String outPath12 = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\dataMatrix12_out.txt";
+			String outPath13 = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\dataMatrix13_out.txt";
+			String outPath23 = "C:\\Users\\Katrijn\\Desktop\\PixieOutFiles\\dataMatrix23_out.txt";
 				
 				
 			if (userChanNum1 == 0 && userChanNum2 == 1)
@@ -107,6 +119,7 @@ public class MatArrayFin
 			System.out.println("Error occurred in MatArrayFin! " + e.getMessage());
 		}
 		dataFile.close();
+		System.out.println("Finished...");
 	}
 	
 	public void writeMatrixToAsciiFile(String outPath, int [][] matrix)
@@ -126,7 +139,7 @@ public class MatArrayFin
 				matOut.write("\n");
 			}
 			matOut.close();
-			fos.close();
+			//fos.close();
 
 		}
 		catch (Exception e)
@@ -143,6 +156,7 @@ public class MatArrayFin
 		if (!dataFile.open())
 			return false;
 		
+		System.out.println("Got into here as well");
 		
 		int[] validMatrixBins = {4096};
 		boolean matrixBinsValid = false;
@@ -153,6 +167,8 @@ public class MatArrayFin
 		double iterateStart = 0.0;
 		int iterateEnergy = 0;
 		
+		//dataMatrix = new int[_matrixBins][_matrixBins];
+
 		
 		try
 		{
@@ -177,7 +193,7 @@ public class MatArrayFin
 			// Create matrix of proper size
 			// if we ever want a larger/smaller
 			// bin number change at top: _matrixBins
-			dataMatrix = new int[_matrixBins][_matrixBins];
+			//dataMatrix = new int[_matrixBins][_matrixBins];
 								
 			// Zero out matrix
 			for (int i = 0; i < dataMatrix.length; i++)
@@ -199,15 +215,18 @@ public class MatArrayFin
 				{
 					for (boolean bChannel = dataFile.moveFirstChannel(); bChannel; bChannel = dataFile.moveNextChannel())
 					{
+
 						// If returning from an iteration, skip to next event
 						if (iterateReturn)
 						{
 							iterateReturn = false;
 							continue;
 						}
-										
+						
+
 						int chanNum = dataFile.getEventChannel();
 						double eventTime = dataFile.getBufferTime();
+
 
 						// Get info for first hit
 						if (!iterateForward && (chanNum == userChanNum1 || chanNum == userChanNum2))
@@ -219,7 +238,8 @@ public class MatArrayFin
 							dataFile.markPosition();
 							continue;
 						}
-											
+						
+						
 						// Check to see if in time window
 						if (iterateForward && ((eventTime - iterateStart) > coinWindow))
 						{
@@ -230,7 +250,6 @@ public class MatArrayFin
 							iterateEnergy = 0;
 											
 							dataFile.rollbackPosition();
-											
 							continue;
 						}
 										
@@ -260,7 +279,7 @@ public class MatArrayFin
 		}
 		catch (Exception e)
 		{
-			System.out.println("Problem occurred in createMatrix! " + e.getMessage());
+			System.out.println("Error occurred in createMatrix! " + e.getMessage());
 		}
 		
 		return true;
