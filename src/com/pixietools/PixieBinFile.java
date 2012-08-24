@@ -29,9 +29,12 @@ public class PixieBinFile
 	private ChannelHeader _currChannelHeader = null;
 	
 	// Mark / Roll back headers
-	private BufferHeader _markBufferHeader = null;
-	private EventHeader _markEventHeader = null;
-	private ChannelHeader _markChannelHeader = null;
+	//private BufferHeader _markBufferHeader = null;
+	private BufferHeader _markBufferHeader = new BufferHeader();
+	//private EventHeader _markEventHeader = null;
+	private EventHeader _markEventHeader = new EventHeader();
+	//private ChannelHeader _markChannelHeader = null;
+	private ChannelHeader _markChannelHeader = new ChannelHeader();
 	private long _markFilePosition = 0;
 	
 	
