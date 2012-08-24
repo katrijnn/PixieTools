@@ -257,8 +257,12 @@ public class MatArrayFin
 						{
 							int energyCh1 = (int)Math.floor(energyScaleFactor * (double)iterateEnergy);
 							int energyCh2 = (int)Math.floor(energyScaleFactor * (double)dataFile.getEventEnergy());
-												
-							dataMatrix[energyCh1][energyCh2]++;
+							
+							if (energyCh1 < 4097 && energyCh2 < 4097)
+							{
+								dataMatrix[energyCh1][energyCh2]++;	
+							}
+							
 						}
 											
 						if (iterateForward && 
@@ -267,8 +271,12 @@ public class MatArrayFin
 						{
 							int energyCh1 = (int)Math.floor(energyScaleFactor * (double)dataFile.getEventEnergy());
 							int energyCh2 = (int)Math.floor(energyScaleFactor * (double)iterateEnergy);
-												
-							dataMatrix[energyCh1][energyCh2]++;
+							
+							if (energyCh1 < 4097 && energy Ch2 < 4097)
+							{
+								dataMatrix[energyCh1][energyCh2]++;	
+							}
+							
 						}
 
 					}	
